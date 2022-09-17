@@ -1,0 +1,12 @@
+obj
+.vscode
+**/.vscode
+**/*.o
+*.o
+**/*.a
+**/*.so
+*.so
+*.a
+**/*.log
+*.log
+resources
