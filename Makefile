@@ -9,25 +9,25 @@ include mkvars/src/corewar.mk
 all:				$(NAME_ASM) $(NAME_COREWAR)
 
 $(OBJ_PATH)/%.o:	$(SRC_PATH)/%.c
-					@mkdir -p $(dir $@)
-					@/bin/echo -e "$(INFO) Compiling" $@ $(RESET_COLOR)
-					@$(CC) -c $(CFLAGS) -o $@ $<
+				@mkdir -p $(dir $@)
+				@/bin/echo -e "$(INFO) Compiling" $@ $(RESET_COLOR)
+				@$(CC) -c $(CFLAGS) -o $@ $<
 
 -include $(DEP)
 
 
 $(NAME_ASM):		$(OBJ) $(OBJ_ASM)
-					@$(CC) -o $(NAME_ASM) $(OBJ) $(OBJ_ASM)
+				@$(CC) -o $(NAME_ASM) $(OBJ) $(OBJ_ASM)
 
 $(NAME_COREWAR):	$(OBJ) $(OBJ_COREWAR)
-					@$(CC) -o $(NAME_COREWAR) $(OBJ) $(OBJ_COREWAR)
+				@$(CC) -o $(NAME_COREWAR) $(OBJ) $(OBJ_COREWAR)
 
 clean:
-					@rm -f $(OBJ) $(OBJ_ASM) $(OBJ_COREWAR)
+				@rm -f $(OBJ) $(OBJ_ASM) $(OBJ_COREWAR)
 
-fclean:				clean
-					@rm -rf $(OBJ_PATH)
-					@rm -f $(NAME_ASM) $(NAME_COREWAR)
+fclean:			clean
+				@rm -rf $(OBJ_PATH)
+				@rm -f $(NAME_ASM) $(NAME_COREWAR)
 
 re:					fclean all
 
