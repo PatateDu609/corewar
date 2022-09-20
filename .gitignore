@@ -10,3 +10,6 @@ obj
 **/*.log
 *.log
 resources
+
+asm
+corewar
