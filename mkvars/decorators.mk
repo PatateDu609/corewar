@@ -1,10 +1,10 @@
-RESET_COLOR			:=	\e[0m
+RESET_COLOR			:=	\033[0m
 
-RED					:=	\e[38;5;124m
-GREEN				:=	\e[38;5;46m
-BLUE				:=	\e[38;5;21m
+RED					:=	\033[38;5;124m
+GREEN				:=	\033[38;5;46m
+BLUE				:=	\033[38;5;21m
 
-BOLD				:=	\e[1m
+BOLD				:=	\033[1m
 
 INFO				:=	$(BLUE)$(BOLD)≫$(RESET)$(BLUE)
 ERROR				:=	$(RED)$(BOLD)≫$(RESET)$(RED)
