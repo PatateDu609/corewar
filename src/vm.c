@@ -56,6 +56,7 @@ int	string_len(t_vm *vars, int i)
 		printf("Error: closing fd\n");
 	if (ret == -1)
 		printf("Error: idk\n");
+	// printf("len = %d\n", vars->champion_len[i]);
 	return (vars->champion_len[i]);
 }
 
@@ -73,7 +74,8 @@ void	parsing_champ(t_vm *vars)
 			printf("Error: open file %s\n", vars->champion[i]);
 		if (read(fd, vars->champion_string[i], vars->champion_len[i]) == -1)
 			printf("Error: read\n");
-		vars->champion_string[len] = 0;
+		vars->champion_string[i][len] = '\0'; // BUS ERROR ICI !!!
+		printf("%s = %s\n", vars->champion[i], vars->champion_string[i]);
 		if (close(fd) == -1)
 			printf("Error: close\n");
 	}
