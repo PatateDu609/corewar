@@ -16,5 +16,14 @@ typedef struct	s_vm
 	char	arena[MEM_SIZE];
 }		t_vm;
 
+// typedef struct s_arena
+// {
+// 	char	byte[MEM_SIZE];
+// }		t_arena;
+
+// To-do list:
+// 	1) réussir à parser un .cor (Error: read)
+// 	2) refaire une belle structure
+// 	3) pk je n'arrive pas à utiliser la libft ????
 
 #endif
