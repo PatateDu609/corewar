@@ -9,10 +9,10 @@ typedef struct	s_vm
 {
 	int	nbr_cycles;
 	int	nbr_champions;
-        int	nchampion[MAX_PLAYERS];
-	char*	champion[MAX_PLAYERS];
-	char*	champion_string[MAX_PLAYERS];
-	int	champion_len[MAX_PLAYERS];
+        int	nchampion[MAX_PLAYERS + 1];
+	char*	champion[MAX_PLAYERS + 1];
+	char	champion_string[MAX_PLAYERS + 1][4042];
+	int	champion_len[MAX_PLAYERS + 1];
 	char	arena[MEM_SIZE];
 }		t_vm;
 
