@@ -50,8 +50,8 @@ int	string_len(t_vm *vars, int i)
 		if (ret != 0)
 			vars->champion_len[i] += ret;
 	}
-	if (vars->champion_len[i] > TOTAL_SIZE)
-		printf("Error: size file too big\n");
+	// if (vars->champion_len[i] > TOTAL_SIZE)
+	// 	printf("Error: size file too big\n");
 	if (close(fd) == -1)
 		printf("Error: closing fd\n");
 	if (ret == -1)
@@ -73,8 +73,9 @@ void	parsing_champ(t_vm *vars)
 		if ((fd = open(vars->champion[i], O_RDONLY)) == -1)
 			printf("Error: open file %s\n", vars->champion[i]);
 		if (read(fd, vars->champion_string[i], vars->champion_len[i]) == -1)
-			printf("Error: read\n");
-		vars->champion_string[i][len] = '\0'; // BUS ERROR ICI !!!
+			printf("Error: read %d\n", i);
+		printf("buff[%d] = %s\n", i, vars->champion_string[i]);
+		vars->champion_string[i][len] = '\0';
 		printf("%s = %s\n", vars->champion[i], vars->champion_string[i]);
 		if (close(fd) == -1)
 			printf("Error: close\n");
@@ -92,5 +93,6 @@ int	main(int argc, char**argv)
 	if (!parsing_args(argc, argv, &vars))
 		printf("Error: bad args\n");
 	parsing_champ(&vars);
+	printf("\n%s = %s", vars.champion[0], vars.champion_string[0]);
 	return (0);
 }
