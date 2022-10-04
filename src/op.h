@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:33:27 by zaz               #+#    #+#             */
-/*   Updated: 2022/09/18 12:31:40 by rbourgea         ###   ########.fr       */
+/*   Updated: 2022/10/04 10:22:05 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@
 typedef struct		s_header
 {
   unsigned int		magic;
-  char				prog_name[PROG_NAME_LENGTH + 1];
+  char			prog_name[PROG_NAME_LENGTH + 1];
   unsigned int		prog_size;
-  char				comment[COMMENT_LENGTH + 1];
-}					t_header;
+  char			comment[COMMENT_LENGTH + 1];
+}			t_header;
 
 typedef struct s_op	t_op;
 

@@ -20,15 +20,15 @@ int	parsing_args(int argc, char **argv, t_vm *vars)
 		}
 		else if (strcmp(argv[i], "-n") == 0)
 		{
-			vars->nchampion[vars->nbr_champions] = atoi(argv[i + 1]);
-			vars->champion[vars->nbr_champions] = argv[i + 2];
+			vars->champion[vars->nbr_champions].number = atoi(argv[i + 1]);
+			vars->champion[vars->nbr_champions].path = argv[i + 2];
 			vars->nbr_champions++;
 			i++;
 		}
 		else
 		{
-			vars->nchampion[vars->nbr_champions] = vars->nbr_champions;
-			vars->champion[vars->nbr_champions] = argv[i];
+			vars->champion[vars->nbr_champions].number = vars->nbr_champions;
+			vars->champion[vars->nbr_champions].path = argv[i];
 			// printf("Champ n%d: %s !\n",vars->nbr_champions, vars->champion[vars->nbr_champions]);
 			vars->nbr_champions++;
 		}
@@ -42,43 +42,72 @@ int	string_len(t_vm *vars, int i)
 	int	ret;
 	int	fd;
 
-	vars->champion_len[i] = 0;
-	if ((fd = open(vars->champion[i], O_RDONLY)) == -1)
-		printf("Error: open file %s\n", vars->champion[i]);
+	vars->champion[i].length = 0;
+	if ((fd = open(vars->champion[i].path, O_RDONLY)) == -1)
+		printf("Error: open file %s\n", vars->champion[i].path);
 	while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		if (ret != 0)
-			vars->champion_len[i] += ret;
+			vars->champion[i].length += ret;
 	}
-	// if (vars->champion_len[i] > TOTAL_SIZE)
-	// 	printf("Error: size file too big\n");
-	if (close(fd) == -1)
+	if (!(vars->champion[i].file = (unsigned char*)malloc(sizeof(char) * vars->champion[i].length)))
+		return (-1);
+	if (close(fd) == -1) 
 		printf("Error: closing fd\n");
 	if (ret == -1)
 		printf("Error: idk\n");
-	// printf("len = %d\n", vars->champion_len[i]);
-	return (vars->champion_len[i]);
+	return (vars->champion[i].length);
 }
 
 void	parsing_champ(t_vm *vars)
 {
 	int fd;
 	int len;
+	int test;
 
 	for (int i = 0; i < vars->nbr_champions; i++)
 	{
-		if (strcmp(vars->champion[i] + strlen(vars->champion[i]) - 4, ".cor") != 0)
-			printf("Error: bad champ extension (%s) !\n", vars->champion[i]);
-		len = string_len(vars, i);
-		if ((fd = open(vars->champion[i], O_RDONLY)) == -1)
-			printf("Error: open file %s\n", vars->champion[i]);
-		if (read(fd, vars->champion_string[i], vars->champion_len[i]) == -1)
+		if (strcmp(vars->champion[i].path + strlen(vars->champion[i].path) - 4, ".cor") != 0)
+			printf("Error: bad champ extension (%s) !\n", vars->champion[i].path);
+		if ((len = string_len(vars, i)) == -1)
+			printf("Error: file len %s\n", vars->champion[i].path);
+		if ((fd = open(vars->champion[i].path, O_RDONLY)) == -1)
+			printf("Error: open file %s\n", vars->champion[i].path);
+		if ((test = read(fd, vars->champion[i].file, vars->champion[i].length)) == -1)
 			printf("Error: read %d\n", i);
-		printf("buff[%d] = %s\n", i, vars->champion_string[i]);
-		vars->champion_string[i][len] = '\0';
-		printf("%s = %s\n", vars->champion[i], vars->champion_string[i]);
 		if (close(fd) == -1)
 			printf("Error: close\n");
+		// for (int j = 0; j < vars->champion[i].length; j++) // display champ code for debug
+		// 	printf("0x%.2x ", vars->champion[i].file[j]);
+	}
+}
+
+void	free_all(t_vm *vars)
+{
+	for (int i = 0; i < vars->nbr_champions; i++)
+		free(vars->champion[i].file);
+}
+
+void	get_champ_info(t_vm *vars)
+{
+	t_header *infos;
+
+	for (int i = 0; i < vars->nbr_champions; i++)
+	{
+		infos = (t_header *)vars->champion[i].file;
+		// printf("magic = %d\nprog_name = %s\nprog_size = %d\ncomment = %s",
+		// 	infos->magic, infos->prog_name, infos->prog_size, infos->comment);
+		vars->champion[i].header = infos;
+		// printf("\nmagic = %d\nprog_name = %s\nprog_size = %d\ncomment = %s",
+		// 	vars->champion[i].header->magic, vars->champion[i].header->prog_name, 
+		// 	vars->champion[i].header->prog_size, vars->champion[i].header->comment);
+		// Checking infos
+		if (vars->champion[i].header->magic != COREWAR_EXEC_MAGIC)
+			printf("Error: bad COREWAR_EXEC_MAGIC: %d != %d\n", vars->champion[i].header->magic, COREWAR_EXEC_MAGIC);
+		if (strlen(vars->champion[i].header->prog_name) > PROG_NAME_LENGTH)
+			printf("Error: bad PROG_NAME_LENGTH: %lu != %d\n", strlen(vars->champion[i].header->prog_name), PROG_NAME_LENGTH);
+		if (strlen(vars->champion[i].header->comment) > COMMENT_LENGTH)
+			printf("Error: bad COMMENT_LENGTH: %lu != %d\n", strlen(vars->champion[i].header->comment), COMMENT_LENGTH);
 	}
 }
 
@@ -93,6 +122,7 @@ int	main(int argc, char**argv)
 	if (!parsing_args(argc, argv, &vars))
 		printf("Error: bad args\n");
 	parsing_champ(&vars);
-	printf("\n%s = %s", vars.champion[0], vars.champion_string[0]);
+	get_champ_info(&vars);
+	free_all(&vars);
 	return (0);
 }
