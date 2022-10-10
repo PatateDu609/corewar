@@ -11,5 +11,5 @@ obj
 *.log
 resources
 
-asm
-corewar
+/asm
+/corewar

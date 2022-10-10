@@ -22,7 +22,8 @@ LIB_PATH		:=	lib
 
 LIBFT_PATH		:=	$(LIB_PATH)/libft
 LIBFT			:=	$(LIBFT_PATH)/libft.a
+LIBSTC42_PATH	:=	$(LIB_PATH)/libstc42
 
 # Maybe we'll need the libft... or another homemade library
-CFLAGS			+=	-I$(INC_PATH)
+CFLAGS			+=	-I$(INC_PATH) -I$(LIBFT_PATH)/include -I$(LIBSTC42_PATH)/include
 LDFLAGS			:= -L$(LIBFT_PATH) -lft

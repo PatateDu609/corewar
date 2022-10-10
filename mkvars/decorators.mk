@@ -6,6 +6,6 @@ BLUE				:=	\033[38;5;21m
 
 BOLD				:=	\033[1m
 
-INFO				:=	$(BLUE)$(BOLD)≫$(RESET)$(BLUE)
-ERROR				:=	$(RED)$(BOLD)≫$(RESET)$(RED)
-DONE				:=	$(GREEN)$(BOLD)≫$(RESET)$(GREEN)
+INFO				:=	$(BLUE)$(BOLD)≫$(RESET_COLOR)$(BLUE)
+ERROR				:=	$(RED)$(BOLD)≫$(RESET_COLOR)$(RED)
+DONE				:=	$(GREEN)$(BOLD)≫$(RESET_COLOR)$(GREEN)
