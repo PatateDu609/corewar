@@ -12,7 +12,10 @@ typedef struct	s_champ
 	char*		name;
 	char*		comment;
 	int		length;
+	unsigned char*	instructions;
+	int		inst_len;
 	unsigned char*	file;
+	int		live;
 	t_header*	header;
 }		t_champ;
 
@@ -21,7 +24,7 @@ typedef struct	s_vm
 	int	nbr_cycles;
 	int	nbr_champions;
 	t_champ	champion[MAX_PLAYERS];
-	char	arena[MEM_SIZE];
+	char*	arena;
 }		t_vm;
 
 // typedef struct s_arena

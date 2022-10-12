@@ -4,10 +4,23 @@
 #include <fcntl.h>
 #include "../lib/libft/include/libft.h"
 
+void	free_all(t_vm *vars)
+{
+	for (int i = 0; i < vars->nbr_champions; i++)
+		free(vars->champion[i].file);
+}
+
+void	exit_vm(t_vm *vars)
+{
+	free_all(vars);
+	exit(0);
+}
+
 void	init_vm(t_vm *vars)
 {
 	vars->nbr_cycles = 0;
 	vars->nbr_champions = 0;
+	vars->champion->live = 0;
 }
 
 int	parsing_args(int argc, char **argv, t_vm *vars)
@@ -68,24 +81,55 @@ void	parsing_champ(t_vm *vars)
 	for (int i = 0; i < vars->nbr_champions; i++)
 	{
 		if (strcmp(vars->champion[i].path + strlen(vars->champion[i].path) - 4, ".cor") != 0)
+		{
 			printf("Error: bad champ extension (%s) !\n", vars->champion[i].path);
+			exit_vm(vars);
+		}
 		if ((len = string_len(vars, i)) == -1)
+		{
 			printf("Error: file len %s\n", vars->champion[i].path);
+			exit_vm(vars);
+		}
 		if ((fd = open(vars->champion[i].path, O_RDONLY)) == -1)
+		{
 			printf("Error: open file %s\n", vars->champion[i].path);
-		if ((test = read(fd, vars->champion[i].file, vars->champion[i].length)) == -1)
+			exit_vm(vars);
+		}
+		if (read(fd, vars->champion[i].file, vars->champion[i].length) == -1)
+		{
 			printf("Error: read %d\n", i);
+			exit_vm(vars);
+		}
 		if (close(fd) == -1)
-			printf("Error: close\n");
+		{
+			printf("Error: close (parsing_champ)\n");
+			exit_vm(vars);
+		}
 		// for (int j = 0; j < vars->champion[i].length; j++) // display champ code for debug
 		// 	printf("0x%.2x ", vars->champion[i].file[j]);
 	}
 }
 
-void	free_all(t_vm *vars)
+void	champ_enter_arena(t_vm *vars)
 {
+	if (!(vars->arena = (char *)malloc(sizeof(char) * MEM_SIZE)))
+		return;
+	// get champ instructions
 	for (int i = 0; i < vars->nbr_champions; i++)
-		free(vars->champion[i].file);
+	{
+		int pos = PROG_NAME_LENGTH + COMMENT_LENGTH;
+		vars->champion[i].inst_len = vars->champion[i].length - pos;
+		int j = 0;
+		if (!(vars->champion[i].instructions = (unsigned char *)malloc(sizeof(char) * vars->champion[i].inst_len)))
+			return;
+		while (pos < vars->champion->length)
+		{
+			vars->champion[i].instructions[j] = vars->champion[i].file[pos];
+			pos++;
+		}
+		for (int k = 0; k < vars->champion[i].inst_len; k++) // display champ instructions for debug
+			printf("0x%.2x ", vars->champion[i].instructions[k]);
+	}
 }
 
 void	get_champ_info(t_vm *vars)
@@ -123,6 +167,7 @@ int	main(int argc, char**argv)
 		printf("Error: bad args\n");
 	parsing_champ(&vars);
 	get_champ_info(&vars);
+	champ_enter_arena(&vars);
 	free_all(&vars);
 	return (0);
 }
