@@ -24,6 +24,8 @@ enum token_type get_token_type(char *val)
 			type = TOK_UNKNOWN; // If file is valid, should never get there...
 		}
 	}
+	if (is_string(val, len))
+		return TOK_STRING;
 	if (is_word(val))
 		type = TOK_WORD;
 	if (is_header(val, len))

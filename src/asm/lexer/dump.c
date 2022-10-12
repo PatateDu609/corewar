@@ -26,6 +26,7 @@ void dump_tokens(char *line, lst_token_t *toks)
 		"Number",
 		"Word",
 		"Instruction",
+		"String"
 	};
 
 	for (lst_node_token_t *node = toks->start; node; node = node->next)

@@ -30,8 +30,9 @@ static ssize_t get_tok_len(const char *line)
 
 			continue;
 		}
-
-		if (line[len] == ' ' || line[len] == '\t' || line[len] == COMMENT_CHAR
+		if (line[len] == ' '
+			|| line[len] == '\t'
+			|| line[len] == COMMENT_CHAR
 			|| char_is_special(line[len]))
 			break;
 	}
@@ -43,7 +44,6 @@ bool tokenize(char *line, lst_token_t *toks)
 	if (!line || !toks)
 		return false;
 
-	token_t tok;
 	char *true_line = ft_strtrim(line, " \t");
 	if (!true_line)
 	{
@@ -52,10 +52,9 @@ bool tokenize(char *line, lst_token_t *toks)
 	}
 	if (!*true_line)
 		return false;
-
 	while (*true_line)
 	{
-		ft_memset(&tok, 0, sizeof tok);
+		token_t tok = { .value = NULL, .type = TOK_DEFAULT};
 
 		if (*true_line == '#')
 			break;
@@ -64,22 +63,26 @@ bool tokenize(char *line, lst_token_t *toks)
 			return false;
 
 		tok.value = ft_strndup(true_line, tok_len);
-		tok.type = get_token_type(tok.value); // First pass of types
+		tok.type = get_token_type(tok.value);
+		if (tok.type == TOK_STRING)
+		{
+			char *tmp = ft_strndup(tok.value + 1, tok_len - 2);
+			free(tok.value);
+			tok.value = tmp;
+		}
 
 		if (!lst_token_push_back(toks, tok))
 		{
 			dprintf(2, "Error: Cannot push a new token to list.\n");
 			exit(EXIT_FAILURE);
 		}
-		char *tmp = true_line;
-		true_line += tok_len;
-		line = ft_strtrim(true_line, " \t");
+		line = ft_strtrim(true_line + tok_len, " \t");
 		if (!line)
 		{
 			dprintf(2, "Error: Cannot allocate memory.\n");
 			exit(EXIT_FAILURE);
 		}
-		free(tmp);
+		free(true_line);
 		true_line = line;
 	}
 	return true;

@@ -5,6 +5,7 @@ BASENAME_ASM	:=	main.c								\
 					lexer/tokenizer.c					\
 					lexer/dump.c						\
 					lexer/token_type/type.c				\
+					lexer/token_type/is_string.c		\
 					lexer/token_type/is_number.c		\
 					lexer/token_type/is_word.c			\
 					lexer/token_type/is_header.c		\

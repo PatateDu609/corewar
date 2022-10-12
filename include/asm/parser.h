@@ -19,10 +19,12 @@ typedef struct
 		TOK_NUMBER,
 		TOK_WORD,
 		TOK_INSTRUCTION,
+		TOK_STRING,
 	} type;
 
 	char *value;
 } token_t;
+
 
 #include <string.h>
 // Linked list of tokens... Do not comment nor delete any of the 3 following lines.
@@ -69,6 +71,7 @@ void dump_tokens(char *line, lst_token_t *toks);
 
 enum token_type get_token_type(char *val);
 
+bool is_string(const char *str, size_t len);
 bool is_word(const char *str);
 bool is_number(const char *str);
 bool is_register(const char *val, size_t len);

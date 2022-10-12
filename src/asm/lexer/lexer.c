@@ -7,6 +7,8 @@
 
 bool ln_is_useful(char *ln)
 {
+	if (!ft_strlen(ln))
+		return false;
 	for (; *ln; ln++)
 		if (*ln != '#' && !(9 <= *ln && *ln <= 13))
 			return true;
@@ -18,7 +20,7 @@ static size_t count_lines(char **lines)
 	size_t ln = 0;
 	for (size_t i = 0; lines[i]; i++)
 	{
-		if (ft_strlen(lines[i]) && ln_is_useful(lines[i]))
+		if (ln_is_useful(lines[i]))
 			ln++;
 	}
 	return ln;
