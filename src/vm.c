@@ -117,7 +117,7 @@ void	champ_enter_arena(t_vm *vars)
 	// get champ instructions
 	for (int i = 0; i < vars->nbr_champions; i++)
 	{
-		int pos = PROG_NAME_LENGTH + COMMENT_LENGTH;
+		int pos = PROG_NAME_LENGTH + COMMENT_LENGTH + 16;
 		vars->champion[i].inst_len = vars->champion[i].length - pos;
 		int j = 0;
 		if (!(vars->champion[i].instructions = (unsigned char *)malloc(sizeof(char) * vars->champion[i].inst_len)))
@@ -126,9 +126,39 @@ void	champ_enter_arena(t_vm *vars)
 		{
 			vars->champion[i].instructions[j] = vars->champion[i].file[pos];
 			pos++;
+			j++;
 		}
 		for (int k = 0; k < vars->champion[i].inst_len; k++) // display champ instructions for debug
-			printf("0x%.2x ", vars->champion[i].instructions[k]);
+			printf("%d ", vars->champion[i].instructions[k]);
+	}
+}
+
+void	load_champ(t_vm *vars)
+{
+	t_op *op;
+	if (!(op = (t_op*)malloc(sizeof(t_op) * 100)))
+		return;
+	int j = 0;
+	while (1)
+	{
+		for (int i = 0; i < vars->nbr_champions; i++)
+		{
+			for (int k = 0; k < vars->champion[i].inst_len; k++)
+			{
+				op[j].name = op_tab[vars->champion[i].instructions[k]].name;
+				op[j].nb_params = op_tab[vars->champion[i].instructions[k]].nb_params;
+				op[j].opcode = op_tab[vars->champion[i].instructions[k]].opcode;
+				op[j].nb_cycles = op_tab[vars->champion[i].instructions[k]].nb_cycles;
+				op[j].description = op_tab[vars->champion[i].instructions[k]].description;
+				op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
+				op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
+				// if (!op.param_types)
+				// 	op.param_types = op_tab[vars->champion[i].instructions[k]].param_types;
+				printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
+				j++;
+				return;
+			}
+		}
 	}
 }
 
@@ -168,6 +198,7 @@ int	main(int argc, char**argv)
 	parsing_champ(&vars);
 	get_champ_info(&vars);
 	champ_enter_arena(&vars);
+	load_champ(&vars);
 	free_all(&vars);
 	return (0);
 }
