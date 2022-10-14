@@ -4,6 +4,7 @@
 #include "../common/define.h"
 #include "./file.h"
 
+struct line;
 typedef struct
 {
 	enum token_type {
@@ -23,6 +24,7 @@ typedef struct
 	} type;
 
 	char *value;
+	struct line *ln;
 } token_t;
 
 
@@ -40,11 +42,23 @@ enum ln_error
 	LN_ERR_UNKNOWN_CHARACTER,
 	LN_ERR_WRONG_LABEL,
 	LN_ERR_WRONG_NUMBER,
+	LN_ERR_BAD_REGISTRY,
 
 	// Detectable at parser step
 	LN_ERR_INSTRUCTION_NOT_FOUND,
+
+	// Errors triggered by invalid parameter of instruction or header...
+	LN_ERR_UNWANTED_REGISTRY,
+	LN_ERR_UNWANTED_DIRECT_PARAM,
+	LN_ERR_UNWANTED_INDIRECT_PARAM,
+	LN_ERR_UNWANTED_VALUE,
+	LN_ERR_UNWANTED_LABEL,
+	LN_ERR_UNWANTED_STRING,
+
+	LN_ERR_WRONG_NUMBER_ARGUMENTS,
 };
 
+typedef struct ast_node ast_t;
 struct line
 {
 	char *original;
@@ -54,6 +68,7 @@ struct line
 	enum ln_error err;
 
 	lst_token_t *tokens;
+	ast_t *ast;
 };
 
 struct parser
@@ -64,9 +79,10 @@ struct parser
 	struct line *lns;
 };
 
-void lexer(struct parser *p);
-bool tokenize(char *line, lst_token_t *toks);
+void parse(struct parser *p);
+bool tokenize(struct line *line); // lexer
 
+char *dump_token_type(enum token_type type);
 void dump_tokens(char *line, lst_token_t *toks);
 
 enum token_type get_token_type(char *val);
