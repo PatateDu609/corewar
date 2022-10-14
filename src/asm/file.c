@@ -29,7 +29,7 @@ static void fill_info(struct asm_file *info)
 		exit(EXIT_FAILURE);
 	}
 
-	info->content = malloc(info->filesize * sizeof *info->content);
+	info->content = ft_calloc(info->filesize + 1, sizeof *info->content);
 	if (!info->content)
 	{
 		perror("Error");
