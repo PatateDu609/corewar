@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 
 #include "asm/parser.h"
+#include "asm/ast.h"
 #include <libft.h>
 #include <stdio.h>
 #include "common/op.h"
@@ -28,7 +29,7 @@ static size_t count_lines(char **lines)
 
 void parse(struct parser *p)
 {
-	char **lines = ft_split(p->input->content, '\n');
+	char **lines = split_lines(p->input->content);
 
 	if (!lines)
 	{
@@ -38,16 +39,26 @@ void parse(struct parser *p)
 	p->nb = count_lines(lines);
 	p->lns = ft_calloc(p->nb, sizeof *p->lns);
 
+	char *dot = ft_strrchr(p->input->filename, '.');
+	const char *start = ft_strrchr(p->input->filename, '/');
+	start = start ? start + 1 : p->input->filename;
+	size_t len = dot - start;
 	for (size_t i = 0, j = 0; lines[i]; i++)
 	{
 		if (ln_is_useful(lines[i]))
 		{
 			p->lns[j].original = lines[i];
-			p->lns[j].ln_nb = i;
+			p->lns[j].ln_nb = i + 1;
 			if (!tokenize(p->lns + j))
 				continue ;
-			// build_ast(p->lns + j);
-			dump_tokens(p->lns[j].original, p->lns[j].tokens);
+			char filename[512];
+			snprintf(filename, sizeof filename,
+				"resources/dot_files/%.*s_%05zu.dot", (int)len, start, p->lns[j].ln_nb);
+			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+
+			build_ast(p->lns + j);
+			dump_ast(filename, p->lns + j, p->input->filename);
+
 			j++;
 		}
 		else

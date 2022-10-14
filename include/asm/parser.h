@@ -80,10 +80,12 @@ struct parser
 };
 
 void parse(struct parser *p);
+char **split_lines(char *content);
 bool tokenize(struct line *line); // lexer
+bool build_ast(struct line *ln); // actual parser
 
 char *dump_token_type(enum token_type type);
-void dump_tokens(char *line, lst_token_t *toks);
+void dump_tokens(char *ast_filename, char *line, lst_token_t *toks);
 
 enum token_type get_token_type(char *val);
 

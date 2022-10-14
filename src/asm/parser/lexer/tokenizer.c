@@ -39,10 +39,18 @@ static ssize_t get_tok_len(const char *line)
 	return len;
 }
 
-bool tokenize(char *line, lst_token_t *toks)
+bool tokenize(struct line *ln)
 {
-	if (!line || !toks)
+	if (!ln || !ln->original)
 		return false;
+
+	ln->tokens = lst_token_new();
+	if (!ln->tokens)
+	{
+		dprintf(2, "Error: Cannot allocate a new list.\n");
+		exit(EXIT_FAILURE);
+	}
+	char *line = ln->original;
 
 	char *true_line = ft_strtrim(line, " \t");
 	if (!true_line)
@@ -51,7 +59,10 @@ bool tokenize(char *line, lst_token_t *toks)
 		exit(EXIT_FAILURE);
 	}
 	if (!*true_line)
+	{
+		free(true_line);
 		return false;
+	}
 	while (*true_line)
 	{
 		token_t tok = { .value = NULL, .type = TOK_DEFAULT};
@@ -60,18 +71,21 @@ bool tokenize(char *line, lst_token_t *toks)
 			break;
 		ssize_t tok_len = get_tok_len(true_line);
 		if (!tok_len)
+		{
+			free(true_line);
 			return false;
+		}
 
+		tok.ln = ln;
 		tok.value = ft_strndup(true_line, tok_len);
 		tok.type = get_token_type(tok.value);
 		if (tok.type == TOK_STRING)
 		{
-			char *tmp = ft_strndup(tok.value + 1, tok_len - 2);
-			free(tok.value);
-			tok.value = tmp;
+			tok.value[tok_len - 1] = 0;
+			ft_memmove(tok.value, tok.value + 1, tok_len - 1);
 		}
 
-		if (!lst_token_push_back(toks, tok))
+		if (!lst_token_push_back(ln->tokens, tok))
 		{
 			dprintf(2, "Error: Cannot push a new token to list.\n");
 			exit(EXIT_FAILURE);

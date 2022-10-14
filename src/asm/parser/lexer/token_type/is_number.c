@@ -24,8 +24,13 @@ bool check_prefix_base(const char **str, uint8_t base_size)
 bool __is_number(const char *str, const char *base, uint8_t base_size)
 {
 	char b[16];
+	static char *signs = "+-";
 	ft_strlcpy(b, base, base_size + 1);
 
+	while (ft_strchr(signs, *str) && *str)
+		str++;
+	if (!*str)
+		return false;
 	if (!check_prefix_base(&str, base_size))
 		return false;
 
@@ -37,7 +42,7 @@ bool __is_number(const char *str, const char *base, uint8_t base_size)
 
 bool is_number(const char *str)
 {
-	char *set = "0123456789abcdef";
+	static char *set = "0123456789abcdef";
 
 	if (__is_number(str, set, 2))
 		return true;

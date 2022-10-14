@@ -2,6 +2,12 @@ BASENAME_ASM	:=	main.c										\
 					file.c										\
 					op.c										\
 					parser/parse.c								\
+					parser/build_ast.c							\
+					parser/AST/add.c							\
+					parser/AST/new.c							\
+					parser/AST/dump.c							\
+					parser/AST/get_type.c						\
+					parser/lexer/split_lines.c					\
 					parser/lexer/tokenizer.c					\
 					parser/lexer/dump.c							\
 					parser/lexer/token_type/type.c				\
