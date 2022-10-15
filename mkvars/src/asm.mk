@@ -7,6 +7,8 @@ BASENAME_ASM	:=	main.c										\
 					parser/AST/new.c							\
 					parser/AST/dump.c							\
 					parser/AST/get_type.c						\
+					parser/error/add.c							\
+					parser/error/print.c						\
 					parser/lexer/split_lines.c					\
 					parser/lexer/tokenizer.c					\
 					parser/lexer/dump.c							\

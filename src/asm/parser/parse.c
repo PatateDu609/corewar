@@ -50,7 +50,10 @@ void parse(struct parser *p)
 			p->lns[j].original = lines[i];
 			p->lns[j].ln_nb = i + 1;
 			if (!tokenize(p->lns + j))
-				continue ;
+			{
+				print_errors(p->lns + j);
+				continue;
+			}
 			char filename[512];
 			snprintf(filename, sizeof filename,
 				"resources/dot_files/%.*s_%05zu.dot", (int)len, start, p->lns[j].ln_nb);

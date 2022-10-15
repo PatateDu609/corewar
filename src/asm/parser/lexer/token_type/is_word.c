@@ -4,10 +4,11 @@
 
 bool is_word(const char *val)
 {
-	if (!ft_strchr(LABEL_CHARS, *val++) && !ft_isdigit(*val))
+	if (!ft_strchr(LABEL_CHARS, *val) && !ft_isdigit(*val))
 		return false;
+	val++;
 	for (; *val; val++)
-		if (!ft_strchr(LABEL_CHARS, *val++))
+		if (!ft_strchr(LABEL_CHARS, *val))
 			return false;
 	return true;
 }
