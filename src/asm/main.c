@@ -19,8 +19,8 @@ void assemble(struct asm_file *f)
 	p.lns = NULL;
 	p.nb = 0;
 
-	lexer(&p);
-	// parser(...);
+	parse(&p);
+	// assemble...
 }
 
 int main(int ac, char **av)
