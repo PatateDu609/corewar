@@ -11,8 +11,12 @@ bool ln_is_useful(char *ln)
 	if (!ft_strlen(ln))
 		return false;
 	for (; *ln; ln++)
+	{
+		if (*ln == '#')
+			return false;
 		if (*ln != '#' && !(9 <= *ln && *ln <= 13))
 			return true;
+	}
 	return false;
 }
 
@@ -57,10 +61,17 @@ void parse(struct parser *p)
 			char filename[512];
 			snprintf(filename, sizeof filename,
 				"resources/dot_files/%.*s_%05zu.dot", (int)len, start, p->lns[j].ln_nb);
+			printf("\033[1;31mTokens before contextual analysis:\033[0m\n");
 			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
 
-			build_ast(p->lns + j);
+			bool res = build_ast(p->lns + j);
+
+			printf("\033[1;31mTokens after contextual analysis:\033[0m\n");
+			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+
 			dump_ast(filename, p->lns + j, p->input->filename);
+			printf("\n");
+			printf("Build ast returned \033[1m%s\033[0m\n", res ? "true" : "false");
 
 			j++;
 		}

@@ -31,6 +31,8 @@ char *dump_token_type(enum token_type type)
 		return "Instruction";
 	case TOK_STRING:
 		return "String";
+	case TOK_LABEL:
+		return "Label";
 	default:
 		return "Unknown";
 	}

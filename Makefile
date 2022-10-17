@@ -4,17 +4,14 @@ include mkvars/src/common.mk
 include mkvars/src/asm.mk
 include mkvars/src/corewar.mk
 
-# TODO: Add specific compiler flag for each (include path for example)
-
-all:				$(NAME_ASM) $(NAME_COREWAR)
-
 $(OBJ_PATH)/%.o:	$(SRC_PATH)/%.c
 				@mkdir -p $(dir $@)
 				@/bin/echo -e "$(INFO) Compiling" $@ "$(RESET_COLOR)"
-				@$(CC) -c $(CFLAGS) -o $@ $<
+				@$(CC) -c $(CFLAGS) -MMD -o $@ $<
 
--include $(DEP)
+-include $(DEP) $(DEP_ASM) $(DEP_COREWAR)
 
+all:				$(NAME_ASM) $(NAME_COREWAR)
 
 $(NAME_ASM):	$(OBJ) $(OBJ_ASM) $(LIBFT)
 				@/bin/echo -e "$(DONE) Linking $@ $(RESET_COLOR)"

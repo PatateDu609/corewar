@@ -30,6 +30,7 @@
 
 #define LABEL_CHARS				"abcdefghijklmnopqrstuvwxyz_0123456789"
 
+#define HDR_PREFIX				'.'
 #define NAME_CMD_STRING			".name"
 #define COMMENT_CMD_STRING		".comment"
 
@@ -76,6 +77,7 @@ struct s_op
 	int				has_idx;
 	int				param_types[4];
 };
+
 
 typedef enum {
 	PARAM_UNKNOWN = 0,

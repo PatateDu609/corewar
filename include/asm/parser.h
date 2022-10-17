@@ -16,14 +16,15 @@ typedef struct
 		TOK_DIRECT_CHAR,
 		TOK_LABEL_CHAR,
 
-		// These types should be removed in following version
-		TOK_HEADER,
-		TOK_REGISTER,
-		TOK_INSTRUCTION,
-
 		TOK_NUMBER,
 		TOK_WORD,
 		TOK_STRING,
+
+		// Affected by ast construction (Subcases of TOK_WORD)
+		TOK_HEADER,
+		TOK_INSTRUCTION,
+		TOK_LABEL,
+		TOK_REGISTER,
 	} type;
 
 	char *value;
@@ -70,6 +71,7 @@ enum token_type get_token_type(char *val, struct line *ln);
 
 bool is_string(const char *str, size_t len);
 bool is_word(const char *str);
+bool is_label(const char *val);
 bool is_number(const char *str);
 bool is_register(const char *val, size_t len);
 bool is_header(const char *val, size_t len);
