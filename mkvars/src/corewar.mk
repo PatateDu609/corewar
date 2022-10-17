@@ -1,4 +1,5 @@
-BASENAME_COREWAR	:=
+BASENAME_COREWAR	:=	vm.c	\
+					op.c
 
 SRC_COREWAR			:=	$(addprefix $(SRC_PATH)/corewar/, $(BASENAME_COREWAR))
 OBJ_COREWAR			:=	$(addprefix $(OBJ_PATH)/corewar/, $(BASENAME_COREWAR:.c=.o))

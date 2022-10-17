@@ -1,8 +1,13 @@
 #include <stdio.h>
-#include <string.h>
-#include "vm.h"
 #include <fcntl.h>
-#include "../lib/libft/include/libft.h"
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include "vm.h"
+
+// #include "../lib/libft/include/libft.h"
 
 void	free_all(t_vm *vars)
 {
@@ -76,7 +81,6 @@ void	parsing_champ(t_vm *vars)
 {
 	int fd;
 	int len;
-	int test;
 
 	for (int i = 0; i < vars->nbr_champions; i++)
 	{
@@ -152,11 +156,16 @@ void	load_champ(t_vm *vars)
 				op[j].description = op_tab[vars->champion[i].instructions[k]].description;
 				op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
 				op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
-				// if (!op.param_types)
-				// 	op.param_types = op_tab[vars->champion[i].instructions[k]].param_types;
+				// op[j].param_types = op_tab[vars->champion[i].instructions[k]].param_types;
 				printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
 				j++;
 				return;
+
+				// deductions:
+				// 1) "live" a 4 param
+				// 2) "ld" a 6 param
+				// 9) "zjmp" a 2 param
+				// 11) "sti" a 5 param
 			}
 		}
 	}
@@ -177,7 +186,7 @@ void	get_champ_info(t_vm *vars)
 		// 	vars->champion[i].header->prog_size, vars->champion[i].header->comment);
 		// Checking infos
 		if (vars->champion[i].header->magic != COREWAR_EXEC_MAGIC)
-			printf("Error: bad COREWAR_EXEC_MAGIC: %d != %d\n", vars->champion[i].header->magic, COREWAR_EXEC_MAGIC);
+			printf("Error: bad COREWAR_EXEC_MAGIC: %x != %x\n", vars->champion[i].header->magic, COREWAR_EXEC_MAGIC);
 		if (strlen(vars->champion[i].header->prog_name) > PROG_NAME_LENGTH)
 			printf("Error: bad PROG_NAME_LENGTH: %lu != %d\n", strlen(vars->champion[i].header->prog_name), PROG_NAME_LENGTH);
 		if (strlen(vars->champion[i].header->comment) > COMMENT_LENGTH)
