@@ -7,6 +7,8 @@ static char *dump_ln_error(enum ln_error err)
 {
 	switch(err)
 	{
+	case LN_ERR_SUCCESS:
+		return "Success";
 	case LN_ERR_UNKNOWN_INSTRUCTION:
 		return "Unkown instruction";
 	case LN_ERR_UNKNOWN_HEADER:
@@ -37,6 +39,18 @@ static char *dump_ln_error(enum ln_error err)
 		return "Wrong number of arguments given";
 	case LN_ERR_UNEXPECTED_SEPARATOR_CHAR:
 		return "Was not expecting a parameter separator";
+	case LN_ERR_WRONG_ROOT_TYPE:
+		return "Wrong root type";
+	case LN_ERR_HDR_NO_LABEL_EXPECTED:
+		return "No label is expected on header lines";
+	case LN_ERR_EXPECTED_STRING:
+		return "Expected string parameter";
+	case LN_ERR_EXPECTED_DIRECT_PARAM:
+		return "Expected direct parameter";
+	case LN_ERR_EXPECTED_INDIRECT_PARAM:
+		return "Expected indirect parameter";
+	case LN_ERR_EXPECTED_REGISTER:
+		return "Expected register parameter";
 	default:
 		return "Unkown error";
 	}
@@ -57,7 +71,8 @@ void print_errors(struct line *ln)
 		}
 		else if (ln->errors[i].err == LN_ERR_UNEXPECTED_DIRECT_PARAM ||
 				ln->errors[i].err == LN_ERR_UNEXPECTED_LABEL ||
-				ln->errors[i].err == LN_ERR_UNEXPECTED_SEPARATOR_CHAR)
+				ln->errors[i].err == LN_ERR_UNEXPECTED_SEPARATOR_CHAR ||
+				ln->errors[i].str == NULL)
 			dprintf(2, "%s.", dump_ln_error(ln->errors[i].err));
 		else
 			dprintf(2, "\033[1;35m%s\033[0m: %s.", ln->errors[i].str, dump_ln_error(ln->errors[i].err));

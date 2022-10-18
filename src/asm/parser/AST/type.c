@@ -52,7 +52,7 @@ bool complete_node(struct line *ln, ast_t *ast, lst_node_token_t *node)
 		}
 		else
 		{
-			if (is_instruction(tok->value, len))
+			if (is_instruction(tok->value))
 				tok->type = TOK_INSTRUCTION;
 			else
 				ln_add_error(ln, LN_ERR_UNKNOWN_INSTRUCTION, tok->value);

@@ -5,6 +5,7 @@
 
 enum ln_error
 {
+	LN_ERR_WRONG_CONSTRUCTION = -1,
 	LN_ERR_SUCCESS,
 
 	// Detectable at lexer step
@@ -29,7 +30,16 @@ enum ln_error
 	LN_ERR_INVALID_LABEL,
 	LN_ERR_CANT_COMPLETE_WORD,
 
+	// Errors spotted at validation check
 	LN_ERR_WRONG_NUMBER_ARGUMENTS,
+
+	LN_ERR_WRONG_ROOT_TYPE,
+	LN_ERR_HDR_NO_LABEL_EXPECTED,
+
+	LN_ERR_EXPECTED_STRING,
+	LN_ERR_EXPECTED_DIRECT_PARAM,
+	LN_ERR_EXPECTED_INDIRECT_PARAM,
+	LN_ERR_EXPECTED_REGISTER,
 };
 
 struct error {

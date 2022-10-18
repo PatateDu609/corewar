@@ -63,6 +63,7 @@ void parse(struct parser *p);
 char **split_lines(char *content);
 bool tokenize(struct line *line); // lexer
 bool build_ast(struct line *ln); // actual parser
+bool is_valid(struct line *ln); // Checks if the generated AST is valid
 
 char *dump_token_type(enum token_type type);
 void dump_tokens(char *ast_filename, char *line, lst_token_t *toks);
@@ -75,6 +76,6 @@ bool is_label(const char *val);
 bool is_number(const char *str);
 bool is_register(const char *val, size_t len);
 bool is_header(const char *val, size_t len);
-bool is_instruction(const char *val, size_t vlen);
+bool is_instruction(const char *val);
 
 #endif

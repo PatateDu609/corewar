@@ -88,4 +88,6 @@ typedef enum {
 
 extern t_op op_tab[17];
 
+t_op *get_op_by_name(const char *tag);
+
 #endif

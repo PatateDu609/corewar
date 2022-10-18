@@ -3,6 +3,7 @@ BASENAME_ASM	:=	main.c										\
 					op.c										\
 					parser/parse.c								\
 					parser/build_ast.c							\
+					parser/is_valid.c							\
 					parser/AST/add.c							\
 					parser/AST/new.c							\
 					parser/AST/dump.c							\
