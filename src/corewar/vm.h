@@ -4,6 +4,7 @@
 #include "op.h"
 
 #define TOTAL_SIZE (CHAMP_MAX_SIZE + PROG_NAME_LENGTH + COMMENT_LENGTH + 1)
+#define BUFF_SIZE 10
 
 typedef struct	s_champ
 {
