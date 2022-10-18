@@ -63,6 +63,7 @@ bool tokenize(struct line *ln)
 		free(true_line);
 		return false;
 	}
+	bool res = true;
 	while (*true_line)
 	{
 		token_t tok = { .value = NULL, .type = TOK_DEFAULT};
@@ -78,7 +79,9 @@ bool tokenize(struct line *ln)
 
 		tok.ln = ln;
 		tok.value = ft_strndup(true_line, tok_len);
-		tok.type = get_token_type(tok.value);
+		tok.type = get_token_type(tok.value, ln);
+		if (tok.type == TOK_UNKNOWN)
+			res = false;
 		if (tok.type == TOK_STRING)
 		{
 			tok.value[tok_len - 1] = 0;
@@ -99,5 +102,5 @@ bool tokenize(struct line *ln)
 		free(true_line);
 		true_line = line;
 	}
-	return true;
+	return res;
 }

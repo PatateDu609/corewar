@@ -186,3 +186,13 @@ void set_op_tab(void)
 	op_tab[15] = lfork;
 	op_tab[16] = aff;
 }
+
+t_op *get_op_by_name(const char *tag)
+{
+	static size_t size = sizeof op_tab / sizeof *op_tab;
+
+	for (size_t i = 0; i < size; i++)
+		if (!ft_strcmp(tag, op_tab[i].name))
+			return op_tab + i;
+	return NULL;
+}
