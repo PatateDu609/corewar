@@ -35,7 +35,7 @@
 #define COMMENT_CMD_STRING		".comment"
 
 #define REG_PREFIX				"r"
-#define REG_MIN					0
+#define REG_MIN					1
 #define REG_NUMBER				16
 
 #define CYCLE_TO_DIE			1536

@@ -37,9 +37,9 @@ ast_t *ast_new(enum ast_node_type type);
 ast_t *ast_new_from_tok(token_t *tok);
 ast_t *ast_new_child(struct ast_node *parent, enum ast_node_type type);
 
-bool complete_node(ast_t *ast, lst_node_token_t *node);
+bool complete_node(struct line *ln, ast_t *ast, lst_node_token_t *node);
 
-bool ast_add_token(ast_t **ast, lst_node_token_t **node);
+bool ast_add_token(struct line *ln, ast_t **ast, lst_node_token_t **node);
 
 enum ast_node_type get_ast_type_from_tok(enum token_type tok_type);
 void dump_ast(char *filename, struct line *ln, const char *asm_file);
