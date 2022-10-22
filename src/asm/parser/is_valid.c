@@ -44,7 +44,7 @@ static void check_hdr(struct line *ln, char *hdr, ast_t *params)
 		ln_add_error(ln, LN_ERR_WRONG_NUMBER_ARGUMENTS, hdr);
 	if (params->nb_childs)
 	{
-		if (params->childs[0]->token && params->childs[0]->token->type == TOK_STRING)
+		if (params->childs[0]->token && params->childs[0]->token->type != TOK_STRING)
 			ln_add_error(ln, LN_ERR_EXPECTED_STRING, params->childs[0]->token->value);
 	}
 }

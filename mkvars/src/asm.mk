@@ -6,12 +6,14 @@ BASENAME_ASM	:=	main.c										\
 					parser/is_valid.c							\
 					parser/AST/add.c							\
 					parser/AST/new.c							\
+					parser/AST/free.c							\
 					parser/AST/dump.c							\
 					parser/AST/type.c							\
 					parser/error/add.c							\
 					parser/error/print.c						\
 					parser/lexer/split_lines.c					\
 					parser/lexer/tokenizer.c					\
+					parser/lexer/free.c							\
 					parser/lexer/dump.c							\
 					parser/lexer/token_type/type.c				\
 					parser/lexer/token_type/is_string.c			\

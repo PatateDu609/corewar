@@ -31,55 +31,90 @@ static size_t count_lines(char **lines)
 	return ln;
 }
 
-void parse(struct parser *p)
+static char **setup_lines(struct parser *p)
 {
 	char **lines = split_lines(p->input->content);
 
 	if (!lines)
 	{
 		dprintf(2, "Error: split failed.\n");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	p->nb = count_lines(lines);
+	if (!p->nb)
+	{
+		free(lines);
+		return NULL;
+	}
 	p->lns = ft_calloc(p->nb, sizeof *p->lns);
+	if (!p->lns)
+	{
+		dprintf(2, "Error: Cannot allocate memory.\n");
+		exit(EXIT_FAILURE);
+	}
+	return lines;
+}
 
-	char *dot = ft_strrchr(p->input->filename, '.');
-	const char *start = ft_strrchr(p->input->filename, '/');
-	start = start ? start + 1 : p->input->filename;
-	size_t len = dot - start;
-	for (size_t i = 0, j = 0; lines[i]; i++)
+#define parse_step(step, ln, res)	\
+	if (!step(ln))					\
+	{								\
+		print_errors(ln);			\
+		res = false;				\
+		continue;					\
+	}
+
+static void fill_filename_dotfile(struct parser *p, char *filename, size_t mlen, size_t ln_nb)
+{
+	static char *dot = NULL;
+	static const char *start = NULL;
+	static size_t len = 0;
+	static char *path = "resources/dot_files";
+
+	if (!dot)
+	{
+		dot = ft_strrchr(p->input->filename, '.');
+		start = ft_strrchr(p->input->filename, '/');
+		start = start ? start + 1 : p->input->filename;
+		len = dot - start;
+	}
+
+	snprintf(filename, mlen, "%s/%.*s_%05zu.dot", path, (int)len, start, ln_nb);
+}
+
+bool parse(struct parser *p)
+{
+	char **lines = setup_lines(p);
+	if (!lines)
+		return false;
+
+	bool res = true;
+	for (size_t i = 0, j = 0; lines[i]; i++, j++)
 	{
 		if (ln_is_useful(lines[i]))
 		{
-			char filename[512];
-			snprintf(filename, sizeof filename,
-				"resources/dot_files/%.*s_%05zu.dot", (int)len, start, p->lns[j].ln_nb);
 
 			p->lns[j].original = lines[i];
 			p->lns[j].ln_nb = i + 1;
-			if (!tokenize(p->lns + j))
-			{
-				print_errors(p->lns + j);
-				continue;
-			}
-			if (!build_ast(p->lns + j))
-			{
-				print_errors(p->lns + j);
-				continue;
-			}
+
+			char filename[512];
+			fill_filename_dotfile(p, filename, sizeof filename, p->lns[j].ln_nb);
+
+			parse_step(tokenize, p->lns + j, res)
+			parse_step(build_ast, p->lns + j, res)
+
 			dump_ast(filename, p->lns + j, p->input->filename);
 			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
 
-			if (!is_valid(p->lns + j))
-			{
-				print_errors(p->lns + j);
-				continue;
-			}
-
-			j++;
+			parse_step(is_valid, p->lns + j, res)
 		}
 		else
+		{
+			j--;
 			free(lines[i]);
+		}
 	}
 	free(lines);
+	return res;
 }
+
+#undef parse_step

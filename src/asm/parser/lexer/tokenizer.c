@@ -102,5 +102,6 @@ bool tokenize(struct line *ln)
 		free(true_line);
 		true_line = line;
 	}
+	free(true_line);
 	return res;
 }
