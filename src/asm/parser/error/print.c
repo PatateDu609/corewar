@@ -51,6 +51,12 @@ static char *dump_ln_error(enum ln_error err)
 		return "Expected indirect parameter";
 	case LN_ERR_EXPECTED_REGISTER:
 		return "Expected register parameter";
+	case LN_ERR_EXPECTED_WHITESPACE_AFTER:
+		return "Expected whitespace after token";
+	case LN_ERR_UNEXPECTED_WHITESPACE_AFTER:
+		return "Unexpected_whitespace after token";
+	case LN_ERR_UNEXPECTED_WHITESPACE_BEFORE:
+		return "Unexpected whitespace before token";
 	default:
 		return "Unkown error";
 	}
@@ -58,7 +64,7 @@ static char *dump_ln_error(enum ln_error err)
 
 void print_errors(struct line *ln)
 {
-	printf("\033[1;31mError:\033[0m \033[33mLine %zu\033[0m:\n", ln->ln_nb);
+	printf("\033[1;31mError:\033[0m \033[33mLine %zu\033[0m: %s\n", ln->ln_nb, ln->original);
 	for (size_t i = 0; i < ln->nb_errors; i++)
 	{
 		dprintf(2, "\n - ");

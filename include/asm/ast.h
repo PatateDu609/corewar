@@ -37,6 +37,8 @@ ast_t *ast_new(enum ast_node_type type);
 ast_t *ast_new_from_tok(token_t *tok);
 ast_t *ast_new_child(struct ast_node *parent, enum ast_node_type type);
 
+void free_ast(ast_t *ast);
+
 bool complete_node(struct line *ln, ast_t *ast, lst_node_token_t *node);
 
 bool ast_add_token(struct line *ln, ast_t **ast, lst_node_token_t **node);

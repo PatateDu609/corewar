@@ -15,6 +15,8 @@ char *dump_token_type(enum token_type type)
 		return "Default";
 	case TOK_SEPARATOR_CHAR:
 		return "Parameter separator";
+	case TOK_WHITESPACE:
+		return "Whitespace (space or tab)";
 	case TOK_DIRECT_CHAR:
 		return "Direct value char";
 	case TOK_LABEL_CHAR:
@@ -51,7 +53,8 @@ void dump_tokens(char *ast_filename, char *line, lst_token_t *toks)
 	{
 		token_t data = node->data;
 		printf(BOLD BLUE "node: " RESET BOLD "%s\n" RESET, dump_token_type(data.type));
-		printf(BOLD BLUE "value: " RESET "%s\n", data.value);
+		if (data.value)
+			printf(BOLD BLUE "value: " RESET "%s\n", data.value);
 
 		if (node->next)
 			printf("\n");

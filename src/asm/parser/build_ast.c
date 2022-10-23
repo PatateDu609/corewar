@@ -11,6 +11,8 @@ bool build_ast(struct line *ln)
 
 	for (lst_node_token_t *node = ln->tokens->start; node; node = node->next)
 	{
+		if (node->data.type == TOK_WHITESPACE)
+			continue;
 		enum ast_node_type ast_type = get_ast_type_from_tok(node->data.type);
 		if (ast_type == AST_INCOMPLETE && !complete_node(ln, local_root, node))
 			return false;
