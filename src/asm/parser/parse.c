@@ -92,7 +92,6 @@ bool parse(struct parser *p)
 	{
 		if (ln_is_useful(lines[i]))
 		{
-
 			p->lns[j].original = lines[i];
 			p->lns[j].ln_nb = i + 1;
 
@@ -100,12 +99,13 @@ bool parse(struct parser *p)
 			fill_filename_dotfile(p, filename, sizeof filename, p->lns[j].ln_nb);
 
 			parse_step(tokenize, p->lns + j, res)
-			parse_step(build_ast, p->lns + j, res)
-
-			dump_ast(filename, p->lns + j, p->input->filename);
 			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+			// parse_step(build_ast, p->lns + j, res)
 
-			parse_step(is_valid, p->lns + j, res)
+			// dump_ast(filename, p->lns + j, p->input->filename);
+			// dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+
+			// parse_step(is_valid, p->lns + j, res)
 		}
 		else
 		{

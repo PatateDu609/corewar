@@ -13,6 +13,8 @@ typedef struct
 		TOK_DEFAULT = 0, // Default value affected before contextual analysis
 
 		TOK_SEPARATOR_CHAR,
+		TOK_WHITESPACE,
+
 		TOK_DIRECT_CHAR,
 		TOK_LABEL_CHAR,
 
@@ -72,6 +74,8 @@ void dump_tokens(char *ast_filename, char *line, lst_token_t *toks);
 
 enum token_type get_token_type(char *val, struct line *ln);
 
+bool char_is_whitespace(char c);
+
 bool is_string(const char *str, size_t len);
 bool is_word(const char *str);
 bool is_label(const char *val);
@@ -79,5 +83,6 @@ bool is_number(const char *str);
 bool is_register(const char *val, size_t len);
 bool is_header(const char *val, size_t len);
 bool is_instruction(const char *val);
+bool is_whitespace(const char *val, size_t vlen);
 
 #endif

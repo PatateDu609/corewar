@@ -23,6 +23,7 @@ BASENAME_ASM	:=	main.c										\
 					parser/lexer/token_type/is_register.c		\
 					parser/lexer/token_type/is_instruction.c	\
 					parser/lexer/token_type/is_header.c			\
+					parser/lexer/token_type/is_whitespace.c		\
 
 
 SRC_ASM			:=	$(addprefix $(SRC_PATH)/asm/, $(BASENAME_ASM))

@@ -10,6 +10,8 @@ enum ln_error
 
 	// Detectable at lexer step
 	LN_ERR_STRAY_TOKEN,
+	LN_ERR_MISSING_SINGLE_QUOTE,
+	LN_ERR_MISSING_DOUBLE_QUOTE,
 
 	// Detectable at parser step
 	LN_ERR_UNKNOWN_INSTRUCTION,

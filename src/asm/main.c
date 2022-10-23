@@ -26,20 +26,25 @@ static void free_asm(struct parser *p)
 	free(p->lns);
 }
 
+static bool load(char *filename, struct parser *p)
+{
+	struct asm_file *f = setup_file(filename);
+	if (!f)
+		return false; // Should never happen
+
+	p->input = f;
+	p->lns = NULL;
+	p->nb = 0;
+	return true;
+}
+
 int main(int ac, char **av)
 {
 	if (ac != 2)
 		return usage();
-	struct asm_file *f = setup_file(av[1]);
-
-	assert(f != NULL); // Should never crash the program
-
 	struct parser p;
-	p.input = f;
-	p.lns = NULL;
-	p.nb = 0;
 
-	int exit_code = parse(&p) ? EXIT_SUCCESS : EXIT_FAILURE;
+	int exit_code = load(av[1], &p) && parse(&p) ? EXIT_SUCCESS : EXIT_FAILURE;
 	free_asm(&p);
 	return exit_code;
 }
