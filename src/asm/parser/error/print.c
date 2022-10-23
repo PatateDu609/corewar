@@ -51,6 +51,12 @@ static char *dump_ln_error(enum ln_error err)
 		return "Expected indirect parameter";
 	case LN_ERR_EXPECTED_REGISTER:
 		return "Expected register parameter";
+	case LN_ERR_EXPECTED_WHITESPACE_AFTER:
+		return "Expected whitespace after token";
+	case LN_ERR_UNEXPECTED_WHITESPACE_AFTER:
+		return "Unexpected_whitespace after token";
+	case LN_ERR_UNEXPECTED_WHITESPACE_BEFORE:
+		return "Unexpected whitespace before token";
 	default:
 		return "Unkown error";
 	}
