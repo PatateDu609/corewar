@@ -21,6 +21,5 @@ bool is_register(const char *val, size_t len)
 		return false;
 
 	int reg = ft_atoi(val);
-
 	return (REG_MIN <= reg && reg <= REG_NUMBER);
 }

@@ -91,7 +91,7 @@ void dump_ast(char *filename, struct line *ln, const char *asm_file)
 {
 	ast_t *ast = ln->ast;
 
-	int fd = open(filename, O_WRONLY | O_CREAT, 0644);
+	int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		dprintf(2, "Error: %s: %s.\n", filename, strerror(errno));

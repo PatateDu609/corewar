@@ -2,7 +2,7 @@
 #include "asm/parser.h"
 #include "common/op.h"
 
-enum token_type get_token_type(char *val)
+enum token_type get_token_type(char *val, struct line *ln)
 {
 	size_t len = ft_strlen(val);
 	enum token_type type = TOK_UNKNOWN;
@@ -26,15 +26,13 @@ enum token_type get_token_type(char *val)
 	}
 	if (is_string(val, len))
 		return TOK_STRING;
+	if (is_whitespace(val, len))
+		type = TOK_WHITESPACE;
 	if (is_word(val))
 		type = TOK_WORD;
-	if (is_header(val, len))
-		type = TOK_HEADER;
-	if (is_register(val, len))
-		type = TOK_REGISTER;
 	if (is_number(val))
 		type = TOK_NUMBER;
-	if (is_instruction(val, len))
-		type = TOK_INSTRUCTION;
+	if (type == TOK_UNKNOWN)
+		ln_add_error(ln, LN_ERR_STRAY_TOKEN, val);
 	return type;
 }

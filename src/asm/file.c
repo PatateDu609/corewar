@@ -91,3 +91,11 @@ struct asm_file *setup_file(const char *arg)
 	fill_info(info);
 	return info;
 }
+
+void free_file(struct asm_file *file)
+{
+	close(file->fd);
+	free(file->content);
+	ft_memset(file, 0, sizeof *file);
+	free(file);
+}

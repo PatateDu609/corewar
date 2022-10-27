@@ -5,11 +5,11 @@ static char lf = '\n';
 
 static size_t count_lines(char *content, size_t len)
 {
-	size_t ln_cnt = content[len - 1] == lf;
+	if (len == 0)
+		return 0;
+	size_t ln_cnt = content[len - 1] != lf;
 	for (size_t i = 0; i < len; i++)
 		ln_cnt += content[i] == lf;
-	if (!ln_cnt && len)
-		return 1;
 	return ln_cnt;
 }
 

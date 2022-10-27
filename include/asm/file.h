@@ -15,5 +15,6 @@ struct asm_file
 };
 
 struct asm_file *setup_file(const char *arg);
+void free_file(struct asm_file *file);
 
 #endif

@@ -30,11 +30,12 @@
 
 #define LABEL_CHARS				"abcdefghijklmnopqrstuvwxyz_0123456789"
 
+#define HDR_PREFIX				'.'
 #define NAME_CMD_STRING			".name"
 #define COMMENT_CMD_STRING		".comment"
 
 #define REG_PREFIX				"r"
-#define REG_MIN					0
+#define REG_MIN					1
 #define REG_NUMBER				16
 
 #define CYCLE_TO_DIE			1536
@@ -77,6 +78,7 @@ struct s_op
 	int				param_types[4];
 };
 
+
 typedef enum {
 	PARAM_UNKNOWN = 0,
 	PARAM_REGISTER = 1,
@@ -85,5 +87,7 @@ typedef enum {
 }								t_param_type;
 
 extern t_op op_tab[17];
+
+t_op *get_op_by_name(const char *tag);
 
 #endif

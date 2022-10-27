@@ -4,10 +4,7 @@
 
 bool is_word(const char *val)
 {
-	if (!ft_strchr(LABEL_CHARS, *val++) && !ft_isdigit(*val))
-		return false;
-	for (; *val; val++)
-		if (!ft_strchr(LABEL_CHARS, *val++))
-			return false;
-	return true;
+	if (*val == HDR_PREFIX) // Header...
+		val++;
+	return is_label(val);
 }
