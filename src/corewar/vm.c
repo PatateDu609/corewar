@@ -135,38 +135,250 @@ void	champ_enter_arena(t_vm *vars)
 		for (int k = 0; k < vars->champion[i].inst_len; k++) // display champ instructions for debug
 			printf("%d ", vars->champion[i].instructions[k]);
 	}
+	// now adding inst to area
 }
 
 void	load_champ(t_vm *vars)
 {
-	t_op *op;
-	if (!(op = (t_op*)malloc(sizeof(t_op) * 100)))
+	// t_op *op;
+	// if (!(op = (t_op*)malloc(sizeof(t_op) * 100)))
+	// 	return;
+	char **code;
+	if (!(code = (char **)malloc(sizeof(char *) * 200)))
 		return;
 	int j = 0;
-	while (1)
+	for (int i = 0; i < vars->nbr_champions; i++)
 	{
-		for (int i = 0; i < vars->nbr_champions; i++)
+		for (int k = 0; k < vars->champion[i].inst_len; k++)
 		{
-			for (int k = 0; k < vars->champion[i].inst_len; k++)
-			{
-				op[j].name = op_tab[vars->champion[i].instructions[k]].name;
-				op[j].nb_params = op_tab[vars->champion[i].instructions[k]].nb_params;
-				op[j].opcode = op_tab[vars->champion[i].instructions[k]].opcode;
-				op[j].nb_cycles = op_tab[vars->champion[i].instructions[k]].nb_cycles;
-				op[j].description = op_tab[vars->champion[i].instructions[k]].description;
-				op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
-				op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
-				// op[j].param_types = op_tab[vars->champion[i].instructions[k]].param_types;
-				printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
-				j++;
-				return;
+			// op[j].name = op_tab[vars->champion[i].instructions[k]].name;
+			// op[j].nb_params = op_tab[vars->champion[i].instructions[k]].nb_params;
+			// op[j].opcode = op_tab[vars->champion[i].instructions[k]].opcode;
+			// op[j].nb_cycles = op_tab[vars->champion[i].instructions[k]].nb_cycles;
+			// op[j].description = op_tab[vars->champion[i].instructions[k]].description;
+			// op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
+			// op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
+			// op[j].param_types = op_tab[vars->champion[i].instructions[k]].param_types;
+			// printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
+			// code[j] = op_tab[vars->champion[i].instructions[k]].name;
 
-				// deductions:
-				// 1) "live" a 4 param
-				// 2) "ld" a 6 param
-				// 9) "zjmp" a 2 param
-				// 11) "sti" a 5 param
+			// strcat(code[j], " ");
+			// printf("\ncode[j] = %s", code[j]);
+			// j++;
+			return;
+		}
+	}
+}
+
+void load_arena(t_vm *vars)
+{
+	unsigned int **r;
+	if (!(r = (unsigned int **)malloc(sizeof(unsigned int *) * 16)))
+		return;
+
+	for (int i = 0; i < vars->champion[0].inst_len; i++)
+	{
+		if (vars->champion[0].instructions[i] == 1) // "live"
+		{
+			printf("live %c\n", vars->champion[0].instructions[i  + REG_SIZE]);
+			i += REG_SIZE; // REG_SIZE = 4 by default
+			// !!! do not forget cycles !!!
+		}
+		else if (vars->champion[0].instructions[i] == 2) // "load"
+		{
+			printf("ld\n");
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + REG_SIZE + 2] == itoa(x))
+				{
+					r[x][0] = (r[15][0] + (vars->champion[0].instructions[REG_SIZE + 1] % IDX_MOD));
+					// RX = (PC + (? % IDX_MOD))
+					// !!! do not forget cycles !!!
+					break;
+				}
 			}
+			i += REG_SIZE + 2;
+		}
+		else if (vars->champion[0].instructions[i] == 3) // "store"
+		{
+			printf("st\n");
+			// need example
+		}
+		else if (vars->champion[0].instructions[i] == 4) // "add"
+		{
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 2] == itoa(x))
+				{
+					for (int y = 0; x < REG_NUMBER; y++)
+					{
+						if (vars->champion[0].instructions[i + 3] == itoa(y))
+						{
+							for (int z = 0; z < REG_NUMBER; z++)
+							{
+								if (vars->champion[0].instructions[i + 4] == itoa(z))
+								{
+									r[z][0] = r[x][0] + r[y][0];
+									printf("add %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+									// !!! do not forget cycles !!!
+									break;
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+			i += 4;
+		}
+		else if (vars->champion[0].instructions[i] == 5) // "sub"
+		{
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 2] == itoa(x))
+				{
+					for (int y = 0; x < REG_NUMBER; y++)
+					{
+						if (vars->champion[0].instructions[i + 3] == itoa(y))
+						{
+							for (int z = 0; z < REG_NUMBER; z++)
+							{
+								if (vars->champion[0].instructions[i + 4] == itoa(z))
+								{
+									r[z][0] = r[x][0] - r[y][0];
+									printf("sub %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+									// !!! do not forget cycles !!!
+									break;
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+			i += 4;
+		}
+		else if (vars->champion[0].instructions[i] == 6) // "and"
+		{
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 2] == itoa(x))
+				{
+					for (int y = 0; x < REG_NUMBER; y++)
+					{
+						if (vars->champion[0].instructions[i + 3] == itoa(y))
+						{
+							for (int z = 0; z < REG_NUMBER; z++)
+							{
+								if (vars->champion[0].instructions[i + 4] == itoa(z))
+								{
+									r[z][0] = r[x][0] & r[y][0];
+									printf("and %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+									// !!! do not forget cycles !!!
+									break;
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+			i += 4;
+		}
+		else if (vars->champion[0].instructions[i] == 7) // "or"
+		{
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 2] == itoa(x))
+				{
+					for (int y = 0; x < REG_NUMBER; y++)
+					{
+						if (vars->champion[0].instructions[i + 3] == itoa(y))
+						{
+							for (int z = 0; z < REG_NUMBER; z++)
+							{
+								if (vars->champion[0].instructions[i + 4] == itoa(z))
+								{
+									r[z][0] = r[x][0] | r[y][0];
+									printf("or %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+									// !!! do not forget cycles !!!
+									break;
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+			i += 4;
+		}
+		else if (vars->champion[0].instructions[i] == 8) // "xor"
+		{
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 2] == itoa(x))
+				{
+					for (int y = 0; x < REG_NUMBER; y++)
+					{
+						if (vars->champion[0].instructions[i + 3] == itoa(y))
+						{
+							for (int z = 0; z < REG_NUMBER; z++)
+							{
+								if (vars->champion[0].instructions[i + 4] == itoa(z))
+								{
+									r[z][0] = r[x][0] ^ r[y][0];
+									printf("xor %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+									// !!! do not forget cycles !!!
+									break;
+								}
+							}
+							break;
+						}
+					}
+					break;
+				}
+			}
+			i += 4;
+		}
+		else if (vars->champion[0].instructions[i] == 9) // "zjmp"
+		{
+			printf("zjmp %c %c\n", vars->champion[0].instructions[i + 1], vars->champion[0].instructions[i + 2]);
+			if (vars->champion[0].instructions[i + 1] == 1)
+			{
+				r[15][0] = (r[15][0] + (vars->champion[0].instructions[i + 2] % IDX_MOD));
+				// PC = (PC + (? % IDX_MOD))
+				// !!! do not forget cycles !!!
+			}
+			// else
+				// consumes cycles
+			i += 2;
+		}
+		else if (vars->champion[0].instructions[i] == 10) // "ldi"
+		{
+			printf("ldi\n");
+			for (int x = 0; x < REG_NUMBER; x++)
+			{
+				if (vars->champion[0].instructions[i + 6] == itoa(x))
+				{
+					unsigned int S = (r[15][0] + (vars->champion[0].instructions[i + 3] % IDX_MOD)) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
+					// S = (PC + (1ST PARAM % IDX_MOD)) + 2ND PARAM
+					r[x][0] = (r[15][0] + (S % IDX_MOD));
+					// R = (PC + (S % IDX_MOD))
+				}
+			}
+			// 10 164 0 12 254 253 15
+			i += 6;
+		}
+		else if (vars->champion[0].instructions[i] == 11) // "sti"
+		{
+			printf("sti\n");
+			// DEMANDER CONFIRMATION
+			// arena[PARAM2 + PARAM3] = PARAM1
+			i += 5;
 		}
 	}
 }
