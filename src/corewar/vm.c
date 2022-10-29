@@ -170,215 +170,183 @@ void	load_champ(t_vm *vars)
 	}
 }
 
-void load_arena(t_vm *vars)
+void cycles_emulate(t_vm *vars)
+{
+	unsigned int **cycle;
+	if (!(cycle = (unsigned int **)malloc(sizeof(unsigned int *) * 500)))
+		return;
+
+	int i = 0;
+	while(i < vars->champion[0].inst_len)
+	{
+		// cycle[0][op_tab[vars->champion[0].instructions[i]].nb_cycles] = vars->champion[0].instructions[i];
+		cycle[0][op_tab[vars->champion[0].instructions[i]].nb_cycles] = i;
+
+		if (vars->champion[0].instructions[i] == 1) // "live"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 2) // "ld"
+			i += REG_SIZE + 2; // ✅
+		else if (vars->champion[0].instructions[i] == 3) // "st"
+			i += REG_SIZE; // verif + need exemple
+		else if (vars->champion[0].instructions[i] == 4) // "add"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 5) // "sub"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 6) // "and"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 7) // "or"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 8) // "xor"
+			i += REG_SIZE; // ✅
+		else if (vars->champion[0].instructions[i] == 9) // "zjmp"
+			i += 2;  // ✅
+		else if (vars->champion[0].instructions[i] == 10) // "ldi"
+			i += 6;  // ✅
+		else if (vars->champion[0].instructions[i] == 11) // "sti"
+			i += REG_SIZE; // idk
+		else if (vars->champion[0].instructions[i] == 12) // "fork"
+			i += REG_SIZE; // idk
+		else if (vars->champion[0].instructions[i] == 13) // "lld"
+			i += REG_SIZE + 2; // ✅
+		else if (vars->champion[0].instructions[i] == 14) // lldi
+			i += 6; // ✅
+		else if (vars->champion[0].instructions[i] == 15) // lfork
+			i += REG_SIZE; // idk
+		else if (vars->champion[0].instructions[i] == 16) // "aff"
+			i += REG_SIZE; // idk
+
+		// if (i > MEM_SIZE) // demander !!!!
+		// 	i = 0;
+	}
+
+	load_arena(&vars, cycle);
+}
+
+void load_arena(t_vm *vars, unsigned int **cycle)
 {
 	unsigned int **r;
 	if (!(r = (unsigned int **)malloc(sizeof(unsigned int *) * 16)))
 		return;
 
-	for (int i = 0; i < vars->champion[0].inst_len; i++)
+	int i = 0;
+
+	for (int j = 0; cycle[0][j]; j++)
 	{
+		i = cycle[0][j];
 		if (vars->champion[0].instructions[i] == 1) // "live"
 		{
 			printf("live %c\n", vars->champion[0].instructions[i  + REG_SIZE]);
-			i += REG_SIZE; // REG_SIZE = 4 by default
-			// !!! do not forget cycles !!!
+			// i += REG_SIZE; // REG_SIZE = 4 by default
 		}
 		else if (vars->champion[0].instructions[i] == 2) // "load"
 		{
 			printf("ld\n");
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + REG_SIZE + 2] == itoa(x))
-				{
-					r[x][0] = (r[15][0] + (vars->champion[0].instructions[REG_SIZE + 1] % IDX_MOD));
-					// RX = (PC + (? % IDX_MOD))
-					// !!! do not forget cycles !!!
-					break;
-				}
-			}
-			i += REG_SIZE + 2;
+			r[vars->champion[0].instructions[i + REG_SIZE + 2]][0] = (i + (vars->champion[0].instructions[REG_SIZE + 1] % IDX_MOD));
+			// RX = (i + (? % IDX_MOD))
+			// i += REG_SIZE + 2;
 		}
 		else if (vars->champion[0].instructions[i] == 3) // "store"
 		{
 			printf("st\n");
-			// need example
+			// need example !!!
+			// if (r,r); r2 = r1
+			// else (PC + (2nd arg % IDX_MOD)) = r1
 		}
 		else if (vars->champion[0].instructions[i] == 4) // "add"
 		{
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 2] == itoa(x))
-				{
-					for (int y = 0; x < REG_NUMBER; y++)
-					{
-						if (vars->champion[0].instructions[i + 3] == itoa(y))
-						{
-							for (int z = 0; z < REG_NUMBER; z++)
-							{
-								if (vars->champion[0].instructions[i + 4] == itoa(z))
-								{
-									r[z][0] = r[x][0] + r[y][0];
-									printf("add %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
-									// !!! do not forget cycles !!!
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			i += 4;
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] + r[vars->champion[0].instructions[i + 3]][0];
+			printf("add %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+			// i += REG_SIZE;
 		}
 		else if (vars->champion[0].instructions[i] == 5) // "sub"
 		{
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 2] == itoa(x))
-				{
-					for (int y = 0; x < REG_NUMBER; y++)
-					{
-						if (vars->champion[0].instructions[i + 3] == itoa(y))
-						{
-							for (int z = 0; z < REG_NUMBER; z++)
-							{
-								if (vars->champion[0].instructions[i + 4] == itoa(z))
-								{
-									r[z][0] = r[x][0] - r[y][0];
-									printf("sub %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
-									// !!! do not forget cycles !!!
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			i += 4;
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] - r[vars->champion[0].instructions[i + 3]][0];
+			printf("sub %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+			// i += REG_SIZE;
 		}
 		else if (vars->champion[0].instructions[i] == 6) // "and"
 		{
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 2] == itoa(x))
-				{
-					for (int y = 0; x < REG_NUMBER; y++)
-					{
-						if (vars->champion[0].instructions[i + 3] == itoa(y))
-						{
-							for (int z = 0; z < REG_NUMBER; z++)
-							{
-								if (vars->champion[0].instructions[i + 4] == itoa(z))
-								{
-									r[z][0] = r[x][0] & r[y][0];
-									printf("and %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
-									// !!! do not forget cycles !!!
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			i += 4;
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] & r[vars->champion[0].instructions[i + 3]][0];
+			printf("and %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+			// i += REG_SIZE;
 		}
 		else if (vars->champion[0].instructions[i] == 7) // "or"
 		{
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 2] == itoa(x))
-				{
-					for (int y = 0; x < REG_NUMBER; y++)
-					{
-						if (vars->champion[0].instructions[i + 3] == itoa(y))
-						{
-							for (int z = 0; z < REG_NUMBER; z++)
-							{
-								if (vars->champion[0].instructions[i + 4] == itoa(z))
-								{
-									r[z][0] = r[x][0] | r[y][0];
-									printf("or %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
-									// !!! do not forget cycles !!!
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			i += 4;
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] | r[vars->champion[0].instructions[i + 3]][0];
+			printf("or %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+			// i += REG_SIZE;
 		}
 		else if (vars->champion[0].instructions[i] == 8) // "xor"
 		{
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 2] == itoa(x))
-				{
-					for (int y = 0; x < REG_NUMBER; y++)
-					{
-						if (vars->champion[0].instructions[i + 3] == itoa(y))
-						{
-							for (int z = 0; z < REG_NUMBER; z++)
-							{
-								if (vars->champion[0].instructions[i + 4] == itoa(z))
-								{
-									r[z][0] = r[x][0] ^ r[y][0];
-									printf("xor %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
-									// !!! do not forget cycles !!!
-									break;
-								}
-							}
-							break;
-						}
-					}
-					break;
-				}
-			}
-			i += 4;
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] ^ r[vars->champion[0].instructions[i + 3]][0];
+			printf("xor %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]);
+			// i += REG_SIZE;
 		}
 		else if (vars->champion[0].instructions[i] == 9) // "zjmp"
 		{
 			printf("zjmp %c %c\n", vars->champion[0].instructions[i + 1], vars->champion[0].instructions[i + 2]);
 			if (vars->champion[0].instructions[i + 1] == 1)
 			{
-				r[15][0] = (r[15][0] + (vars->champion[0].instructions[i + 2] % IDX_MOD));
+				i = (i + (vars->champion[0].instructions[i + 2] % IDX_MOD));
 				// PC = (PC + (? % IDX_MOD))
 				// !!! do not forget cycles !!!
 			}
 			// else
 				// consumes cycles
-			i += 2;
+			// i += 2;
 		}
 		else if (vars->champion[0].instructions[i] == 10) // "ldi"
 		{
 			printf("ldi\n");
-			for (int x = 0; x < REG_NUMBER; x++)
-			{
-				if (vars->champion[0].instructions[i + 6] == itoa(x))
-				{
-					unsigned int S = (r[15][0] + (vars->champion[0].instructions[i + 3] % IDX_MOD)) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
-					// S = (PC + (1ST PARAM % IDX_MOD)) + 2ND PARAM
-					r[x][0] = (r[15][0] + (S % IDX_MOD));
-					// R = (PC + (S % IDX_MOD))
-				}
-			}
-			// 10 164 0 12 254 253 15
-			i += 6;
+			unsigned int S = (i + (vars->champion[0].instructions[i + 3] % IDX_MOD)) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
+			// S = (PC + (1ST PARAM % IDX_MOD)) + 2ND PARAM
+			r[vars->champion[0].instructions[i + 6]][0] = (i + (S % IDX_MOD));
+			// R = (PC + (S % IDX_MOD))
+			// i += 6;
 		}
 		else if (vars->champion[0].instructions[i] == 11) // "sti"
 		{
 			printf("sti\n");
 			// DEMANDER CONFIRMATION
 			// arena[PARAM2 + PARAM3] = PARAM1
-			i += 5;
+			// i += ?;
+		}
+		else if (vars->champion[0].instructions[i] == 12) // "fork"
+		{
+			printf("fork\n");
+			// new program start at = (PC + (first parameter % IDX_MOD))
+			// PC += ?;
+		}
+		else if (vars->champion[0].instructions[i] == 13) // "lld"
+		{
+			printf("lld\n");
+			r[vars->champion[0].instructions[i + REG_SIZE + 2]][0] = (i + (vars->champion[0].instructions[REG_SIZE + 1]));
+			// RX = (PC + (?))
+			//  modify the carry ????
+			// i += REG_SIZE + 2;
+		}
+		else if (vars->champion[0].instructions[i] == 14) // "lldi"
+		{
+			printf("lldi\n");
+			unsigned int S = (i + (vars->champion[0].instructions[i + 3])) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
+			// S = (PC + (1ST PARAM)) + 2ND PARAM
+			r[vars->champion[0].instructions[i + 6]][0] = (i + (S));
+			// R = (PC + (S))
+			//  modify the carry ????
+			// i += 6;
+		}
+		else if (vars->champion[0].instructions[i] == 15) // "lfork"
+		{
+			printf("lfork\n");
+			// new program start at = (PC + (first parameter))
+			// PC += ?;
+		}
+		else if (vars->champion[0].instructions[i] == 16) // "aff"
+		{
+			printf("aff\n");
+			r[vars->champion[0].instructions[i  + REG_SIZE + 1]] = vars->champion[0].instructions[i  + REG_SIZE];
+			printf("%c", (char)r[vars->champion[0].instructions[i  + REG_SIZE + 1]] % 256);
+			// i += 4; // verif !!!
 		}
 	}
 }
