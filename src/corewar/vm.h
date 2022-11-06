@@ -34,5 +34,6 @@ typedef struct	s_vm
 // 	char	byte[MEM_SIZE];
 // }		t_arena;
 
+void	load_arena(t_vm *vars, unsigned int **cycle);
 
 #endif
