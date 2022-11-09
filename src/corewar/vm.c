@@ -135,38 +135,292 @@ void	champ_enter_arena(t_vm *vars)
 		for (int k = 0; k < vars->champion[i].inst_len; k++) // display champ instructions for debug
 			printf("%d ", vars->champion[i].instructions[k]);
 	}
+	// now adding inst to area
 }
 
 void	load_champ(t_vm *vars)
 {
-	t_op *op;
-	if (!(op = (t_op*)malloc(sizeof(t_op) * 100)))
+	// t_op *op;
+	// if (!(op = (t_op*)malloc(sizeof(t_op) * 100)))
+	// 	return;
+	char **code;
+	if (!(code = (char **)malloc(sizeof(char *) * 200)))
 		return;
 	int j = 0;
-	while (1)
+	for (int i = 0; i < vars->nbr_champions; i++)
 	{
-		for (int i = 0; i < vars->nbr_champions; i++)
+		for (int k = 0; k < vars->champion[i].inst_len; k++)
 		{
-			for (int k = 0; k < vars->champion[i].inst_len; k++)
-			{
-				op[j].name = op_tab[vars->champion[i].instructions[k]].name;
-				op[j].nb_params = op_tab[vars->champion[i].instructions[k]].nb_params;
-				op[j].opcode = op_tab[vars->champion[i].instructions[k]].opcode;
-				op[j].nb_cycles = op_tab[vars->champion[i].instructions[k]].nb_cycles;
-				op[j].description = op_tab[vars->champion[i].instructions[k]].description;
-				op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
-				op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
-				// op[j].param_types = op_tab[vars->champion[i].instructions[k]].param_types;
-				printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
-				j++;
-				return;
+			// op[j].name = op_tab[vars->champion[i].instructions[k]].name;
+			// op[j].nb_params = op_tab[vars->champion[i].instructions[k]].nb_params;
+			// op[j].opcode = op_tab[vars->champion[i].instructions[k]].opcode;
+			// op[j].nb_cycles = op_tab[vars->champion[i].instructions[k]].nb_cycles;
+			// op[j].description = op_tab[vars->champion[i].instructions[k]].description;
+			// op[j].has_pcode = op_tab[vars->champion[i].instructions[k]].has_pcode;
+			// op[j].has_idx = op_tab[vars->champion[i].instructions[k]].has_idx;
+			// op[j].param_types = op_tab[vars->champion[i].instructions[k]].param_types;
+			// printf("\nop[%d] = { %s, %d, %d, %d, %s, %d, %d, ??? } \n", 0, op[j].name, op[j].nb_params, op[j].opcode, op[j].nb_cycles, op[j].description, op[j].has_pcode, op[j].has_idx);
+			// code[j] = op_tab[vars->champion[i].instructions[k]].name;
 
-				// deductions:
-				// 1) "live" a 4 param
-				// 2) "ld" a 6 param
-				// 9) "zjmp" a 2 param
-				// 11) "sti" a 5 param
+			// strcat(code[j], " ");
+			// printf("\ncode[j] = %s", code[j]);
+			// j++;
+			return;
+		}
+	}
+}
+
+void	cycles_emulate(t_vm *vars, int i)
+{
+	unsigned int **cycle;
+	if (!(cycle = (unsigned int **)malloc(sizeof(unsigned int *) * 1001)))
+		return;
+	// write(1, "HERE\n", 5);
+	// cycle[0][0] = 1;
+	// write(1, cycle, 1);
+	// int i = 0; //passing
+	int j = 0;
+	while(i < vars->champion[0].inst_len)
+	{
+		write(1, "HERE\n", 5);
+		if (vars->champion[0].instructions[i] == 1) // "live"
+		{
+			cycle[0][10 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 2) // "ld"
+		{
+			write(1, "HERE\n", 5);
+			cycle[0][5 + j] = i;
+			i += REG_SIZE + 2; // ✅
+			write(1, "HERE\n", 5);
+		}
+		else if (vars->champion[0].instructions[i] == 3) // "st"
+		{
+			cycle[0][5 + j] = i;
+			i += REG_SIZE; // verif + need exemple
+		}
+		else if (vars->champion[0].instructions[i] == 4) // "add"
+		{
+			cycle[0][10 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 5) // "sub"
+		{
+			cycle[0][10 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 6) // "and"
+		{
+			cycle[0][6 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 7) // "or"
+		{
+			cycle[0][6 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 8) // "xor"
+		{
+			cycle[0][6 + j] = i;
+			i += REG_SIZE; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 9) // "zjmp"
+		{
+			cycle[0][20 + j] = i;
+			i += 2;  // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 10) // "ldi"
+		{
+			cycle[0][25 + j] = i;
+			i += 6;  // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 11) // "sti"
+		{
+			cycle[0][25 + j] = i;
+			i += REG_SIZE; // idk
+		}
+		else if (vars->champion[0].instructions[i] == 12) // "fork"
+		{
+			cycle[0][800 + j] = i;
+			i += REG_SIZE; // idk
+		}
+		else if (vars->champion[0].instructions[i] == 13) // "lld"
+		{
+			cycle[0][10 + j] = i;
+			i += REG_SIZE + 2; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 14) // lldi
+		{
+			cycle[0][50 + j] = i;
+			i += 6; // ✅
+		}
+		else if (vars->champion[0].instructions[i] == 15) // lfork
+		{
+			cycle[0][1000 + j] = i;
+			i += REG_SIZE; // idk
+		}
+		else if (vars->champion[0].instructions[i] == 16) // "aff"
+		{
+			cycle[0][2 + j] = i;
+			i += REG_SIZE; // idk
+		}
+		j++;
+	}
+	printf("cycles done");
+	load_arena(vars, cycle);
+}
+
+void load_arena(t_vm *vars, unsigned int **cycle)
+{
+	unsigned int **r;
+	if (!(r = (unsigned int **)malloc(sizeof(unsigned int *) * 17)))
+		return;
+
+	r[1][0] = vars->champion[0].number; // specify in subject
+
+	int i = 0;
+	int last_live = 0;
+	int cycle_to_die = CYCLE_TO_DIE;
+
+	for (int j = 0; cycle[0][j]; j++) // j == cycle
+	{
+		if (j % cycle_to_die == 0 && last_live < j - cycle_to_die)
+			printf("%s die\n", vars->champion[0].name); // debug
+		else
+			cycle_to_die -= CYCLE_TO_DIE; // heu demander max_check !!!???
+
+		i = cycle[0][j];
+		if (vars->champion[0].instructions[i] == 1) // "live"
+		{
+			printf("live %c\n", vars->champion[0].instructions[i  + REG_SIZE]); // debug
+			printf("A process shows that player %s is alive\n", vars->champion[0].name);
+			// i += REG_SIZE; // REG_SIZE = 4 by default
+		}
+		else if (vars->champion[0].instructions[i] == 2) // "load"
+		{
+			printf("ld\n"); // debug
+			r[vars->champion[0].instructions[i + REG_SIZE + 2]][0] = (i + (vars->champion[0].instructions[REG_SIZE + 1] % IDX_MOD));
+			// RX = (i + (? % IDX_MOD))
+			// i += REG_SIZE + 2;
+		}
+		else if (vars->champion[0].instructions[i] == 3) // "store"
+		{
+			printf("st\n"); // debug
+			// need example !!!
+			// if (r,r); r2 = r1
+			// else (PC + (2nd arg % IDX_MOD)) = r1
+		}
+		else if (vars->champion[0].instructions[i] == 4) // "add"
+		{
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] + r[vars->champion[0].instructions[i + 3]][0];
+			printf("add %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]); // debug
+			// i += REG_SIZE;
+		}
+		else if (vars->champion[0].instructions[i] == 5) // "sub"
+		{
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] - r[vars->champion[0].instructions[i + 3]][0];
+			printf("sub %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]); // debug
+			// i += REG_SIZE;
+		}
+		else if (vars->champion[0].instructions[i] == 6) // "and"
+		{
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] & r[vars->champion[0].instructions[i + 3]][0];
+			printf("and %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]); // debug
+			// i += REG_SIZE;
+		}
+		else if (vars->champion[0].instructions[i] == 7) // "or"
+		{
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] | r[vars->champion[0].instructions[i + 3]][0];
+			printf("or %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]); // debug
+			// i += REG_SIZE;
+		}
+		else if (vars->champion[0].instructions[i] == 8) // "xor"
+		{
+			r[vars->champion[0].instructions[i + 4]][0] = r[vars->champion[0].instructions[i + 2]][0] ^ r[vars->champion[0].instructions[i + 3]][0];
+			printf("xor %c %c %c\n", vars->champion[0].instructions[i + 2], vars->champion[0].instructions[i + 3], vars->champion[0].instructions[i + 4]); // debug
+			// i += REG_SIZE;
+		}
+		else if (vars->champion[0].instructions[i] == 9) // "zjmp"
+		{
+			printf("zjmp %c %c\n", vars->champion[0].instructions[i + 1], vars->champion[0].instructions[i + 2]); // debug
+			if (vars->champion[0].instructions[i + 1] == 1)
+			{
+				i = (i + (vars->champion[0].instructions[i + 2] % IDX_MOD));
+				// PC = (PC + (? % IDX_MOD))
+				// !!! do not forget cycles !!!
 			}
+			// else
+				// consumes cycles
+			// i += 2;
+		}
+		else if (vars->champion[0].instructions[i] == 10) // "ldi"
+		{
+			printf("ldi\n"); // debug
+			unsigned int S = (i + (vars->champion[0].instructions[i + 3] % IDX_MOD)) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
+			// S = (PC + (1ST PARAM % IDX_MOD)) + 2ND PARAM
+			r[vars->champion[0].instructions[i + 6]][0] = (i + (S % IDX_MOD));
+			// R = (PC + (S % IDX_MOD))
+			// i += 6;
+		}
+		else if (vars->champion[0].instructions[i] == 11) // "sti"
+		{
+			printf("sti\n"); // debug
+			// DEMANDER CONFIRMATION
+			// arena[PARAM2 + PARAM3] = PARAM1
+			// i += ?;
+		}
+		else if (vars->champion[0].instructions[i] == 12) // "fork"
+		{
+			printf("fork\n"); // debug
+			int status;
+			pid_t pid;
+
+			pid = fork ();
+			if (pid == 0)
+			{
+				/* This is the child process.  Execute the shell command. */
+				// new program start at = (PC + (first parameter % IDX_MOD))
+				cycles_emulate(vars, (i + ((vars->champion[0].instructions[i] + 1) % IDX_MOD)));
+				_exit (EXIT_FAILURE);
+			}
+			else if (pid < 0)
+				status = -1; /* The fork failed.  Report failure.  */
+			// else
+				/* This is the parent process.  Wait for the child to complete.  */
+			if (waitpid (pid, &status, 0) != pid)
+				status = -1;
+		}
+		else if (vars->champion[0].instructions[i] == 13) // "lld"
+		{
+			printf("lld\n"); // debug
+			r[vars->champion[0].instructions[i + REG_SIZE + 2]][0] = (i + (vars->champion[0].instructions[REG_SIZE + 1]));
+			// RX = (PC + (?))
+			//  modify the carry ????
+			// i += REG_SIZE + 2;
+		}
+		else if (vars->champion[0].instructions[i] == 14) // "lldi"
+		{
+			printf("lldi\n"); // debug
+			unsigned int S = (i + (vars->champion[0].instructions[i + 3])) + (vars->champion[0].instructions[i + 4] + vars->champion[0].instructions[i + 5]);
+			// S = (PC + (1ST PARAM)) + 2ND PARAM
+			r[vars->champion[0].instructions[i + 6]][0] = (i + (S));
+			// R = (PC + (S))
+			//  modify the carry ????
+			// i += 6;
+		}
+		else if (vars->champion[0].instructions[i] == 15) // "lfork"
+		{
+			printf("lfork\n"); // debug
+			// new program start at = (PC + (first parameter))
+			// PC += ?;
+		}
+		else if (vars->champion[0].instructions[i] == 16) // "aff"
+		{
+			printf("aff\n"); // debug
+			*r[vars->champion[0].instructions[i  + REG_SIZE + 1]] = vars->champion[0].instructions[i  + REG_SIZE];
+			printf("%c", (char)*r[vars->champion[0].instructions[i  + REG_SIZE + 1]] % 256);
+			// i += 4; // verif !!!
 		}
 	}
 }
@@ -205,9 +459,14 @@ int	main(int argc, char**argv)
 	if (!parsing_args(argc, argv, &vars))
 		printf("Error: bad args\n");
 	parsing_champ(&vars);
+	printf("parsing_champ done\n");
 	get_champ_info(&vars);
+	printf("get_champ_info done\n");
 	champ_enter_arena(&vars);
-	load_champ(&vars);
+	printf("champ_enter_arena done\n");
+	cycles_emulate(&vars, 0);
+	printf("cycles_emulate done\n");
 	free_all(&vars);
+	printf("free_all done\n");
 	return (0);
 }
