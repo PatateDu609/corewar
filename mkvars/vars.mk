@@ -9,6 +9,17 @@ DEBUG			=	1
 CC				:=	gcc
 CFLAGS			:=	-Wall -Werror -Wextra
 
+ECHO			:=	echo
+
+UNAME_S			:= $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+ECHO			:=	/bin/echo -e
+endif
+ifeq ($(UNAME_S),Darwin)
+ECHO			:=	echo
+endif
+undefine UNAME_S
+
 ifdef DEBUG
 CFLAGS			+=	-g3 -ggdb -O0
 else
