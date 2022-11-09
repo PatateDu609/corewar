@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "asm/file.h"
 #include "asm/parser.h"
+#include "asm/encoder.h"
 #include <assert.h>
 #include "asm/ast.h"
 
@@ -44,7 +45,8 @@ int main(int ac, char **av)
 		return usage();
 	struct parser p;
 
-	int exit_code = load(av[1], &p) && parse(&p) ? EXIT_SUCCESS : EXIT_FAILURE;
+	int exit_code = load(av[1], &p) && parse(&p) && encode(&p)
+		? EXIT_SUCCESS : EXIT_FAILURE;
 	free_asm(&p);
 	return exit_code;
 }

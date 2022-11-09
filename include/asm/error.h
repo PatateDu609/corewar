@@ -46,6 +46,9 @@ enum ln_error
 	LN_ERR_EXPECTED_DIRECT_PARAM,
 	LN_ERR_EXPECTED_INDIRECT_PARAM,
 	LN_ERR_EXPECTED_REGISTER,
+
+	// Errors detected at encoding
+	LN_ERR_LABEL_DOUBLE_DECLARATION,
 };
 
 struct error {

@@ -1,6 +1,9 @@
 BASENAME_ASM	:=	main.c										\
 					file.c										\
 					op.c										\
+					encoder/encode.c							\
+					encoder/get_size.c							\
+					encoder/init.c								\
 					parser/parse.c								\
 					parser/build_ast.c							\
 					parser/is_valid.c							\
