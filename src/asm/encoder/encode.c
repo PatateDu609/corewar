@@ -47,7 +47,7 @@ static void print_labels(struct encoder *enc)
 {
 	if (!enc->nb_labels)
 		printf("No label found.\n");
-	int col_sizes[] = { 20, 10, 15 };
+	int col_sizes[] = { 20, 15, 15 };
 	printf("\033[1m%-*s| %-*s| %-*s\033[0m\n",
 		col_sizes[0], "Name",
 		col_sizes[1], "Offset",
@@ -57,10 +57,18 @@ static void print_labels(struct encoder *enc)
 		col_sizes[1], "",
 		col_sizes[2], "");
 	for (size_t i = 0; i < enc->nb_labels; i++)
-		printf("%-*s\033[1m|\033[0m %-*u\033[1m|\033[0m %-*zu\n",
-			col_sizes[0], enc->labels[i].name,
-			col_sizes[1], enc->labels[i].off,
-			col_sizes[2], enc->labels[i].ln->ln_nb);
+	{
+		printf("%-*s\033[1m|\033[0m", col_sizes[0], enc->labels[i].name);
+
+		char offset[col_sizes[1]];
+		snprintf(offset, sizeof offset, "%0*X", 4 * 2, enc->labels[i].off);
+		char offset_str[128];
+		snprintf(offset_str, sizeof offset_str, "%2.2s %2.2s %2.2s %2.2s",
+			offset, offset + 2, offset + 4, offset + 6);
+		printf(" %-*s\033[1m|\033[0m", col_sizes[1], offset_str);
+
+		printf(" %-*zu\n", col_sizes[2], enc->labels[i].ln->ln_nb);
+	}
 }
 
 bool encode(struct parser *p)
@@ -73,5 +81,7 @@ bool encode(struct parser *p)
 	print_header(&enc);
 	printf("\n");
 	print_labels(&enc);
+
+	fill_encoder(&enc);
 	return true;
 }
