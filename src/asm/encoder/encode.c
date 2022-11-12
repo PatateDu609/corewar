@@ -16,7 +16,7 @@ static void print_header(struct encoder *enc)
 
 	for (size_t i = 0, size = sizeof title / sizeof *title; i < size; i++)
 	{
-		int len = ft_strlen(title[i]);
+		int len = (int)ft_strlen(title[i]);
 		longest = longest < len ? len : longest;
 	}
 
@@ -83,5 +83,5 @@ bool encode(struct parser *p)
 	print_labels(&enc);
 
 	fill_encoder(&enc);
-	return true;
+	return dump_to_file(&enc);
 }

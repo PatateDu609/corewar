@@ -20,8 +20,8 @@ struct encoder
 
 	size_t nb_labels;
 	struct label {
-		char *name;
-		uint32_t off;
+		const char *name;
+		int32_t off;
 		struct line *ln;
 	} *labels;
 
@@ -30,7 +30,19 @@ struct encoder
 
 bool encode(struct parser *p);
 bool init_encoder(struct encoder *enc);
+void fill_encoder(struct encoder *enc);
+bool dump_to_file(struct encoder *enc);
 
 size_t get_instr_size(ast_t *ast);
+
+size_t get_pcode_size(t_op *op);
+uint32_t get_pcode(uint8_t *encoded, ast_t *params, uint32_t local_offset);
+
+uint32_t dump_direct_param(ast_t *param, struct encoder *enc, t_op *op, uint32_t local_offset, uint32_t offset);
+void dump_indirect_param(ast_t *param, struct encoder *enc, uint32_t local_offset, uint32_t offset);
+
+bool check_label(struct encoder *enc, struct line *ln, char *name);
+void add_label(struct encoder *enc, struct line *ln, const char *name, const uint32_t *prog_size);
+struct label *lookup_label(struct encoder *enc, char *name);
 
 #endif

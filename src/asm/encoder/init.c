@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <libft.h>
 #include "asm/encoder.h"
 #include "asm/ast.h"
@@ -27,31 +26,6 @@ static char *get_outfile(struct parser *p)
 	ft_memcpy(outfile + len - old_ext_len, new_ext, new_ext_len);
 	outfile[len + (new_ext_len - old_ext_len)] = 0;
 	return outfile;
-}
-
-static bool check_label(struct encoder *enc, struct line *ln, char *name)
-{
-	for (size_t i = 0; i < enc->nb_labels; i++)
-	{
-		if (!ft_strcmp(enc->labels[i].name, name))
-		{
-			ln_add_error(ln, LN_ERR_LABEL_DOUBLE_DECLARATION, name);
-			return false;
-		}
-	}
-	return true;
-}
-
-static void add_label(struct encoder *enc, struct line *ln, char *name, const uint32_t *prog_size)
-{
-	enc->labels = realloc(enc->labels, (++enc->nb_labels) * sizeof *enc->labels);
-
-	if (!enc->labels)
-	{
-		dprintf(2, "Error: Cannot allocate memory.\n");
-		exit(EXIT_FAILURE);
-	}
-	enc->labels[enc->nb_labels - 1] = (struct label) { .ln = ln, .off = *prog_size, .name = name };
 }
 
 static void fill_hdr(struct encoded *encoded, char *tag, char *param)

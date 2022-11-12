@@ -17,18 +17,6 @@ static size_t get_param_size(enum ast_node_type ast_type, bool dir_len)
 	}
 }
 
-static size_t get_pcode_size(t_op *op)
-{
-	size_t size_acb = 0;
-
-	if (op->has_pcode)
-	{
-		size_acb = op->nb_params * 2;
-		size_acb = (size_acb + (size_acb % 8)) / 8;
-	}
-	return size_acb;
-}
-
 size_t get_instr_size(ast_t *ast)
 {
 	if (ast->type != AST_INSTRUCTION)
