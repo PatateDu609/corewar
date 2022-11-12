@@ -15,6 +15,7 @@ void set_op_tab(void)
 		.description = "alive",
 		.has_pcode = 0,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_DIRECT},
 	};
 	t_op ld = {
@@ -25,6 +26,7 @@ void set_op_tab(void)
 		.description = "load",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_DIRECT | PARAM_INDIRECT, PARAM_REGISTER},
 	};
 	t_op st = {
@@ -35,6 +37,7 @@ void set_op_tab(void)
 		.description = "store",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER, PARAM_INDIRECT | PARAM_REGISTER},
 	};
 	t_op add = {
@@ -45,6 +48,7 @@ void set_op_tab(void)
 		.description = "addition",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER, PARAM_REGISTER, PARAM_REGISTER},
 	};
 	t_op sub = {
@@ -55,6 +59,7 @@ void set_op_tab(void)
 		.description = "soustraction",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER, PARAM_REGISTER, PARAM_REGISTER},
 	};
 	t_op and = {
@@ -65,6 +70,7 @@ void set_op_tab(void)
 		.description = "et (and  r1, r2, r3   r1&r2 -> r3",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER | PARAM_DIRECT | PARAM_INDIRECT, PARAM_REGISTER | PARAM_INDIRECT | PARAM_DIRECT, PARAM_REGISTER},
 	};
 	t_op or = {
@@ -75,6 +81,7 @@ void set_op_tab(void)
 		.description = "ou  (or   r1, r2, r3   r1 | r2 -> r3",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER | PARAM_INDIRECT | PARAM_DIRECT, PARAM_REGISTER | PARAM_INDIRECT | PARAM_DIRECT, PARAM_REGISTER},
 	};
 	t_op xor = {
@@ -85,6 +92,7 @@ void set_op_tab(void)
 		.description = "ou (xor  r1, r2, r3   r1^r2 -> r3",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER | PARAM_INDIRECT | PARAM_DIRECT, PARAM_REGISTER | PARAM_INDIRECT | PARAM_DIRECT, PARAM_REGISTER},
 	};
 	t_op zjmp = {
@@ -95,6 +103,7 @@ void set_op_tab(void)
 		.description = "jump if zero",
 		.has_pcode = 0,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_DIRECT},
 	};
 	t_op ldi = {
@@ -105,6 +114,7 @@ void set_op_tab(void)
 		.description = "load index",
 		.has_pcode = 1,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_REGISTER | PARAM_DIRECT | PARAM_INDIRECT, PARAM_DIRECT | PARAM_REGISTER, PARAM_REGISTER},
 	};
 	t_op sti = {
@@ -115,6 +125,7 @@ void set_op_tab(void)
 		.description = "store index",
 		.has_pcode = 1,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_REGISTER, PARAM_REGISTER | PARAM_DIRECT | PARAM_INDIRECT, PARAM_DIRECT | PARAM_REGISTER},
 	};
 	t_op fork = {
@@ -125,6 +136,7 @@ void set_op_tab(void)
 		.description = "fork",
 		.has_pcode = 0,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_DIRECT},
 	};
 	t_op lld = {
@@ -135,6 +147,7 @@ void set_op_tab(void)
 		.description = "long load",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_DIRECT | PARAM_INDIRECT, PARAM_REGISTER},
 	};
 	t_op lldi = {
@@ -145,6 +158,7 @@ void set_op_tab(void)
 		.description = "long load index",
 		.has_pcode = 1,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_REGISTER | PARAM_DIRECT | PARAM_INDIRECT, PARAM_DIRECT | PARAM_REGISTER, PARAM_REGISTER},
 	};
 	t_op lfork = {
@@ -155,6 +169,7 @@ void set_op_tab(void)
 		.description = "long fork",
 		.has_pcode = 0,
 		.has_idx = 1,
+		.boolean_length_direct = 1,
 		.param_types = {PARAM_DIRECT},
 	};
 	t_op aff = {
@@ -165,10 +180,11 @@ void set_op_tab(void)
 		.description = "aff",
 		.has_pcode = 1,
 		.has_idx = 0,
+		.boolean_length_direct = 0,
 		.param_types = {PARAM_REGISTER},
 	};
 
-	op_tab[0] = (t_op){ "", 0, 0, 0, NULL, 0, 0, {0} };
+	op_tab[0] = (t_op){ "", 0, 0, 0, NULL, 0, 0, 0, {0} };
 	op_tab[1] = live;
 	op_tab[2] = ld;
 	op_tab[3] = st;

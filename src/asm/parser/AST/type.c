@@ -109,7 +109,7 @@ bool complete_node(struct line *ln, ast_t *ast, lst_node_token_t *node)
 
 	switch (ast->type)
 	{
-	case AST_LINE: // Can be label only if token is followed by TOK_LABEL_CHAR
+	case AST_LINE: // Can be a label only if token is followed by TOK_LABEL_CHAR
 		complete_node_ast_line(ln, node);
 		break;
 	// {

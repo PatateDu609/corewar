@@ -140,6 +140,8 @@ bool tokenize(struct line *ln)
 
 	while (*line)
 	{
+		if (*line == COMMENT_CHAR)
+			return res;
 		enum tok_ret_error tok_res = set_token(ln, &token, &line);
 		if (tok_res == TOK_RET_FATAL)
 			return false;
