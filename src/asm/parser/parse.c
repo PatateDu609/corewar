@@ -102,7 +102,7 @@ bool parse(struct parser *p)
 			parse_step(build_ast, p->lns + j, res)
 
 			dump_ast(filename, p->lns + j, p->input->filename);
-			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+			// dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
 
 			parse_step(is_valid, p->lns + j, res)
 		}

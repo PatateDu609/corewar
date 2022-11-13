@@ -1,6 +1,7 @@
 #ifndef ASM_PARSER_H
 #define ASM_PARSER_H
 
+#include <stdint.h>
 #include "../common/define.h"
 #include "./file.h"
 #include "./error.h"
@@ -84,5 +85,8 @@ bool is_register(const char *val, size_t len);
 bool is_header(const char *val, size_t len);
 bool is_instruction(const char *val);
 bool is_whitespace(const char *val, size_t vlen);
+
+bool check_prefix_base(const char **str, uint8_t base);
+int32_t parse_number(const char *str);
 
 #endif

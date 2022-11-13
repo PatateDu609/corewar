@@ -1,16 +1,25 @@
 #ifndef __OP_H__
 # define __OP_H__
 
+#include <inttypes.h>
+#include <stddef.h>
+
 /*
 ** Toutes les tailles sont en octets.
 ** On part du principe qu'un int fait 32 bits. Est-ce vrai chez vous ?
 */
 
-
+#define REG_SIZE				1
 #define IND_SIZE				2
-#define REG_SIZE				4
-#define DIR_SIZE				REG_SIZE
+#define DIR_SIZE				4
 
+#if DIR_SIZE == 1
+typedef uint8_t dir_t;
+#elif DIR_SIZE == 2
+typedef uint16_t dir_t;
+#elif DIR_SIZE == 4
+typedef uint32_t dir_t;
+#endif
 
 # define REG_CODE				1
 # define DIR_CODE				2
@@ -54,7 +63,7 @@
 
 # define PROG_NAME_LENGTH		(128)
 # define COMMENT_LENGTH			(2048)
-# define COREWAR_EXEC_MAGIC		0xea83f3
+# define COREWAR_EXEC_MAGIC		((uint32_t)0xea83f3)
 
 typedef struct	s_header
 {
@@ -75,6 +84,7 @@ struct s_op
 	char*			description;
 	int				has_pcode;
 	int				has_idx;
+	int				boolean_length_direct;
 	int				param_types[4];
 };
 

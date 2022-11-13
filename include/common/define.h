@@ -11,15 +11,15 @@
 #define ESCAPE_CHAR '\\'
 
 #define bswap_16(x) (			\
-		((x << 8) & 0x00ff) |	\
-		((x >> 8) & 0xff00)		\
+		((x & 0x00ff) << 8) |	\
+		((x & 0xff00) >> 8)		\
 	)
 
-#define bswap_32(x) (	\
-		((x << 24) &	0x000000ff) |	\
-		((x << 8) &		0x0000ff00) |	\
-		((x >> 8) &		0x00ff0000) |	\
-		((x >> 24) &	0xff000000)		\
+#define bswap_32(x) (				\
+		((x & 0x000000ffu) << 24) |	\
+		((x & 0x0000ff00u) << 8) |	\
+		((x & 0x00ff0000u) >> 8) |	\
+		((x & 0xff000000u) >> 24)	\
 	)
 
 #endif
