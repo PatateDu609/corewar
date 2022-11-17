@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 14:42:52 by rbourgea          #+#    #+#             */
-/*   Updated: 2022/11/13 15:48:35 by rbourgea         ###   ########.fr       */
+/*   Updated: 2022/11/17 14:27:05 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@
 #define FALSE 0
 #define TRUE 1
 
-#define BLACK_BG    "\e[40m\e[30m%02X\e[0m "
-#define RED_BG      "\e[41m\e[31m%02X\e[0m "
-#define GREEN_BG    "\e[42m\e[32m%02X\e[0m "
-#define YELLOW_BG   "\e[43m\e[33m%02X\e[0m "
-#define BLUE_BG     "\e[44m\e[34m%02X\e[0m "
+#define BLACK    "\e[30m%02X\e[0m "
+#define RED      "\e[31m%02X\e[0m "
+#define GREEN    "\e[32m%02X\e[0m "
+#define YELLOW   "\e[33m%02X\e[0m "
+#define BLUE     "\e[34m%02X\e[0m "
 
 #define SWAP_ENDIAN(x) ((((x>>24) & 0xff) | ((x<<8) & 0xff0000)) | (((x>>8) & 0xff00) | ((x<<24) & 0xff000000)))
 #define SWAP_ENDIAN_16(x) (((x>>24) & 0xff) | ((x<<8) & 0xff00))
