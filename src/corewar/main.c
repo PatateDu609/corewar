@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 14:40:08 by rbourgea          #+#    #+#             */
-/*   Updated: 2022/11/13 16:06:11 by rbourgea         ###   ########.fr       */
+/*   Updated: 2022/11/17 14:44:44 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,7 +283,8 @@ int zjump(t_stat *stats, t_champion *champ)
 	return 0;
 }
 
-/* 0x10 LDI *********************************************************** */
+
+/* 0x0a LDI *********************************************************** */
 /* This operation modifies the carry. ldi 3,%4,r1 reads IND_SIZE        */
 /* bytes at address: (PC + (3 % IDX_MOD)), adds 4 to this value.        */ 
 /* We will name this sum S. Read REG_SIZE bytes at address (PC          */
@@ -315,7 +316,8 @@ int ldi(t_stat *stats, t_champion *champ)
 	return 0;
 }
 
-/* 0x11 STI *********************************************************** */
+
+/* 0x0b STI *********************************************************** */
 /* sti r2,%4,%5 sti copies REG_SIZE bytes of r2 at address (4 + 5)      */
 /* Parameters 2 and 3 are indexes. If they are, in fact, registers,     */
 /* we’ll use their contents as indexes.                                 */
@@ -356,6 +358,14 @@ int sti(t_stat *stats, t_champion *champ)
 	stats->arena.zone[save_pc + nb % MEM_SIZE] = ret;
 	return 0;
 }
+
+/* 0x0c FORK ********************************************************** */
+/* This instruction is not followed by a parameter encoding byte. It    */
+/* always takes an index and creates a new program, which is            */
+/* executed from address : (PC + (first parameter % IDX_MOD)).          */
+/* Fork %34 creates a new program. The new program inherits all of      */
+/* its father’s states.                                                 */
+/* ******************************************************************** */
 
 t_champion copy_champ(t_champion *champ)
 {
@@ -411,6 +421,11 @@ int ft_fork(t_stat *stats, t_champion *champ)
 	return 0;
 }
 
+/* 0x0d LLD ********************************************************** */
+/* Same as ld, but without the % IDX_MOD This operation                */
+/* modifies the carry.                                                 */
+/* ******************************************************************* */
+
 int lld(t_stat *stats, t_champion *champ)
 {
     char code;
@@ -429,6 +444,11 @@ int lld(t_stat *stats, t_champion *champ)
     champ->pc = (champ->pc + 1) % MEM_SIZE;
     return 0;
 }
+
+/* 0x0e LLDI ********************************************************** */
+/* Same as ldi, but without the % IDX_MOD This operation                */
+/* modifies the carry.                                                  */
+/* ******************************************************************** */
 
 int lldi(t_stat *stats, t_champion *champ)
 {
@@ -453,6 +473,11 @@ int lldi(t_stat *stats, t_champion *champ)
     champ->registers[reg] = (champ->pc + arg1);
     return 0;
 }
+
+/* 0x0f LFORK ********************************************************** */
+/* Same as fork, but without the % IDX_MOD This operation                */
+/* modifies the carry.                                                   */
+/* ********************************************************************* */
 
 t_champion *lrealloc_champ(t_stat *stats, int index, int offset)
 {
@@ -479,6 +504,14 @@ int lfork(t_stat *stats, t_champion *champ)
     stats->champions = lrealloc_champ(stats, get_index(stats, champ), SWAP_ENDIAN_16(*(int*)nb));
     return 0;
 }
+
+/* 0x10 AFF ************************************************************ */
+/* This instruction is followed by a parameter encoding byte. It         */
+/* takes a register and displays the character the ASCII code of         */
+/* which is contained in the register. (a modulo 256 is applied to this  */
+/* ascii code, the character is displayed on the standard output) Ex:    */
+/* ld %52,r3 aff r3 Displays ’*’ on the standard output                  */
+/* ********************************************************************* */
 
 int aff(t_stat *stats, t_champion *champ)
 {
@@ -599,7 +632,7 @@ void print_arena(t_stat *stats)
 	int tmp = -1;
 	for (int i = 0; i < MEM_SIZE; i++)
 	{
-		printf(stats->arena.user_id[i] == 0 ? "\e[30m%X\e[0m " : stats->arena.user_id[i] == 1 ? BLUE_BG: stats->arena.user_id[i] == 2 ? RED_BG: stats->arena.user_id[i] == 3 ? YELLOW_BG : GREEN_BG, stats->arena.zone[i]);
+		printf(stats->arena.user_id[i] == 0 ? "\e[30m%X\e[0m " : stats->arena.user_id[i] == 1 ? BLUE: stats->arena.user_id[i] == 2 ? RED: stats->arena.user_id[i] == 3 ? YELLOW : GREEN, stats->arena.zone[i]);
 		if (i == tmp + 32)
 		{
 			tmp = i;
