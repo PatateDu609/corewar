@@ -27,6 +27,7 @@
 #define FALSE 0
 #define TRUE 1
 
+
 #define BLACK    "\e[30m%02X\e[0m "
 #define RED      "\e[31m%02X\e[0m "
 #define GREEN    "\e[32m%02X\e[0m "

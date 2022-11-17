@@ -283,6 +283,7 @@ int zjump(t_stat *stats, t_champion *champ)
 	return 0;
 }
 
+
 /* 0x0a LDI *********************************************************** */
 /* This operation modifies the carry. ldi 3,%4,r1 reads IND_SIZE        */
 /* bytes at address: (PC + (3 % IDX_MOD)), adds 4 to this value.        */ 
@@ -314,6 +315,7 @@ int ldi(t_stat *stats, t_champion *champ)
 	champ->registers[reg] = (champ->pc + arg1) % IDX_MOD;
 	return 0;
 }
+
 
 /* 0x0b STI *********************************************************** */
 /* sti r2,%4,%5 sti copies REG_SIZE bytes of r2 at address (4 + 5)      */
