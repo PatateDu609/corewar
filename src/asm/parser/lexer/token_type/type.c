@@ -9,19 +9,37 @@ enum token_type get_token_type(char *val, struct line *ln)
 
 	if (len == 1)
 	{
-		switch(val[0])
+		switch (val[0])
 		{
-		case SEPARATOR_CHAR:
-			type = TOK_SEPARATOR_CHAR;
-			break;
-		case LABEL_CHAR:
-			type = TOK_LABEL_CHAR;
-			break;
-		case DIRECT_CHAR:
-			type = TOK_DIRECT_CHAR;
-			break;
-		default:
-			type = TOK_UNKNOWN; // If file is valid, should never get there...
+			case SEPARATOR_CHAR:
+				type = TOK_SEPARATOR_CHAR;
+				break;
+			case LABEL_CHAR:
+				type = TOK_LABEL_CHAR;
+				break;
+			case '%':
+				type = TOK_PERCENT; // Will be specified by the AST_GENERATION
+				break;
+			case '+':
+				type = TOK_PLUS;
+				break;
+			case '-':
+				type = TOK_MINUS;
+				break;
+			case '*':
+				type = TOK_STAR;
+				break;
+			case '/':
+				type = TOK_SLASH;
+				break;
+			case '(':
+				type = TOK_OPEN_PARENTHESIS;
+				break;
+			case ')':
+				type = TOK_CLOSE_PARENTHESIS;
+				break;
+			default:
+				type = TOK_UNKNOWN; // If file is valid, should never get there...
 		}
 	}
 	if (is_string(val, len))

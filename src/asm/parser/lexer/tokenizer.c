@@ -15,13 +15,13 @@ enum tok_ret_error {
 	TOK_RET_SUCCESS,
 };
 
-#define MISSING_DQ -1
-#define MISSING_SQ -2
+#define MISSING_DQ (-1)
+#define MISSING_SQ (-2)
 
 static inline bool char_is_special(char c)
 {
-	return c == SEPARATOR_CHAR || c == DIRECT_CHAR ||
-		c == LABEL_CHAR || c == COMMENT_CHAR;
+	return c == SEPARATOR_CHAR || c == DIRECT_CHAR || c == LABEL_CHAR || c == COMMENT_CHAR ||
+		c == '+' || c == '-' || c == '*' || c == '(' || c == ')';
 }
 
 static void setup_tokenizer(struct line *ln)
@@ -52,7 +52,7 @@ static enum char_mode get_char_mode(char c)
 
 static ssize_t toklen(char *line)
 {
-	size_t len = 0;
+	ssize_t len = 0;
 
 	if (char_is_special(line[len]))
 		return 1;
@@ -126,7 +126,7 @@ static enum tok_ret_error set_token(struct line *ln, token_t *token, char **line
 	if (token->type == TOK_UNKNOWN)
 		return TOK_RET_MINOR_ERROR;
 	manage_special_types(token, len);
-	return true;
+	return TOK_RET_SUCCESS;
 }
 
 bool tokenize(struct line *ln)

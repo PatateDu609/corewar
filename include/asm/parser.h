@@ -13,10 +13,12 @@ typedef struct
 		TOK_UNKNOWN = -1,
 		TOK_DEFAULT = 0, // Default value affected before contextual analysis
 
+		TOK_PERCENT,
+
 		TOK_SEPARATOR_CHAR,
 		TOK_WHITESPACE,
 
-		TOK_DIRECT_CHAR,
+		TOK_DIRECT_CHAR, // Will be affected at AST generation
 		TOK_LABEL_CHAR,
 
 		TOK_NUMBER,
@@ -28,6 +30,15 @@ typedef struct
 		TOK_INSTRUCTION,
 		TOK_LABEL,
 		TOK_REGISTER,
+
+		// Mathematical expressions
+		TOK_PLUS, // +
+		TOK_MINUS, // -
+		TOK_STAR, // *
+		TOK_SLASH, // /
+		TOK_MODULO, // % (will be affected at AST generation)
+		TOK_OPEN_PARENTHESIS, // (
+		TOK_CLOSE_PARENTHESIS, // )
 	} type;
 
 	char *value;

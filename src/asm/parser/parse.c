@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include "asm/parser.h"
 #include "asm/ast.h"
 #include <libft.h>
@@ -63,7 +61,7 @@ static char **setup_lines(struct parser *p)
 		continue;					\
 	}
 
-static void fill_filename_dotfile(struct parser *p, char *filename, size_t mlen, size_t ln_nb)
+static void fill_filename_dotfile(struct parser *p, char *filename, size_t ln_nb)
 {
 	static char *dot = NULL;
 	static const char *start = NULL;
@@ -78,7 +76,7 @@ static void fill_filename_dotfile(struct parser *p, char *filename, size_t mlen,
 		len = dot - start;
 	}
 
-	snprintf(filename, mlen, "%s/%.*s_%05zu.dot", path, (int)len, start, ln_nb);
+	snprintf(filename, 512, "%s/%.*s_%05zu.dot", path, (int)len, start, ln_nb);
 }
 
 bool parse(struct parser *p)
@@ -88,6 +86,7 @@ bool parse(struct parser *p)
 		return false;
 
 	bool res = true;
+	char filename[512];
 	for (size_t i = 0, j = 0; lines[i]; i++, j++)
 	{
 		if (ln_is_useful(lines[i]))
@@ -95,16 +94,15 @@ bool parse(struct parser *p)
 			p->lns[j].original = lines[i];
 			p->lns[j].ln_nb = i + 1;
 
-			char filename[512];
-			fill_filename_dotfile(p, filename, sizeof filename, p->lns[j].ln_nb);
+			fill_filename_dotfile(p, filename, p->lns[j].ln_nb);
 
 			parse_step(tokenize, p->lns + j, res)
-			parse_step(build_ast, p->lns + j, res)
+//			parse_step(build_ast, p->lns + j, res)
 
-			dump_ast(filename, p->lns + j, p->input->filename);
-			// dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
+//			dump_ast(filename, p->lns + j, p->input->filename);
+			dump_tokens(filename, p->lns[j].original, p->lns[j].tokens);
 
-			parse_step(is_valid, p->lns + j, res)
+//			parse_step(is_valid, p->lns + j, res)
 		}
 		else
 		{
@@ -113,6 +111,8 @@ bool parse(struct parser *p)
 		}
 	}
 	free(lines);
+
+	exit(0);
 	return res;
 }
 

@@ -11,32 +11,48 @@ char *dump_token_type(enum token_type type)
 {
 	switch (type)
 	{
-	case TOK_DEFAULT:
-		return "Default";
-	case TOK_SEPARATOR_CHAR:
-		return "Parameter separator";
-	case TOK_WHITESPACE:
-		return "Whitespace (space or tab)";
-	case TOK_DIRECT_CHAR:
-		return "Direct value char";
-	case TOK_LABEL_CHAR:
-		return "Label char";
-	case TOK_HEADER:
-		return "Header";
-	case TOK_REGISTER:
-		return "Register";
-	case TOK_NUMBER:
-		return "Number";
-	case TOK_WORD:
-		return "Word";
-	case TOK_INSTRUCTION:
-		return "Instruction";
-	case TOK_STRING:
-		return "String";
-	case TOK_LABEL:
-		return "Label";
-	default:
-		return "Unknown";
+		case TOK_DEFAULT:
+			return "Default";
+		case TOK_PERCENT:
+			return "Percent symbol (still not specified)";
+		case TOK_SEPARATOR_CHAR:
+			return "Parameter separator";
+		case TOK_WHITESPACE:
+			return "Whitespace (space or tab)";
+		case TOK_DIRECT_CHAR:
+			return "Direct value char";
+		case TOK_LABEL_CHAR:
+			return "Label char";
+		case TOK_HEADER:
+			return "Header";
+		case TOK_REGISTER:
+			return "Register";
+		case TOK_NUMBER:
+			return "Number";
+		case TOK_WORD:
+			return "Word";
+		case TOK_INSTRUCTION:
+			return "Instruction";
+		case TOK_STRING:
+			return "String";
+		case TOK_LABEL:
+			return "Label";
+		case TOK_PLUS:
+			return "Plus sign";
+		case TOK_MINUS:
+			return "Minus sign";
+		case TOK_STAR:
+			return "Multiplication symbol";
+		case TOK_SLASH:
+			return "Division symbol";
+		case TOK_MODULO:
+			return "Modulo symbol";
+		case TOK_OPEN_PARENTHESIS:
+			return "Open parenthesis";
+		case TOK_CLOSE_PARENTHESIS:
+			return "Close parenthesis";
+		default:
+			return "Unknown";
 	}
 }
 

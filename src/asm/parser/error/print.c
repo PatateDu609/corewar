@@ -1,7 +1,6 @@
-#define _GNU_SOURCE
 #include <libft.h>
-#include "asm/error.h"
 #include <stdio.h>
+#include "asm/parser.h"
 
 static char *dump_ln_error(enum ln_error err)
 {

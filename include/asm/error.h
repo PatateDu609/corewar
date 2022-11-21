@@ -62,6 +62,4 @@ void ln_add_error(struct line *ln, enum ln_error type, char *val);
 
 void print_errors(struct line *ln);
 
-#include "parser.h"
-
 #endif
